@@ -1,6 +1,6 @@
 # BagIt Indexer
 
-A simple tool for extracting data from Bags for indexing in Solr, ElasticSearch, etc.
+A simple tool for extracting data from Bags for indexing in Solr, Elasticsearch, etc.
 
 ## System requirements and installation
 
@@ -14,6 +14,24 @@ To install the Bagit Indexer:
 * `php composer.phar install` (or equivalent on your system, e.g., `./composer install`)
 
 ## Usage
+
+`php bagit_indexer.php --help`
+
+```
+--help
+     Show the help page for this command.
+
+
+-i/--input <argument>
+     Required. Absolute or relative path to a directory containing Bags. Trailing slash is optional.
+
+
+-o/--output <argument>
+     Required. Absolute or relative path to the directory where the JSON documents will be saved. Trailing slash is optional.
+```
+
+Output is a JSON file like this for each bag in the input directory:
+
 
 ```json
 {
@@ -59,3 +77,4 @@ GPLv3
 ## To do
 
 * Provide sample queries in Solr.
+* Test with bags that contain subdirectories in /data.
