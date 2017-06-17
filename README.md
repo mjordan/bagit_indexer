@@ -15,7 +15,7 @@ To install the Bagit Indexer:
 
 ## Usage
 
-```
+```json
 {
    "id":"Bag-islandora_116",
    "bagit_version":{
