@@ -10,12 +10,14 @@ A simple tool for extracting data from Bags for indexing in Solr, Elasticsearch,
 
 To install the Bagit Indexer:
 * Clone the Git repo
-* `cd bagit_indexer
+* `cd bagit_indexer`
 * `php composer.phar install` (or equivalent on your system, e.g., `./composer install`)
 
 ## Usage
 
-`php bagit_indexer.php --help`
+This tool extracts data from Bags. It does not push the data into an indexing engine such as Solr or Elasticsearch. You need to do that yourself.
+
+Run `php bagit_indexer.php --help` to get help info:
 
 ```
 --help
@@ -30,8 +32,7 @@ To install the Bagit Indexer:
      Required. Absolute or relative path to the directory where the JSON documents will be saved. Trailing slash is optional.
 ```
 
-Output is a JSON file like this for each bag in the input directory:
-
+Basically, all you need is some Bags (serialized or loose) in your input directory. Running the tool produces a JSON file like this one for each input Bag:
 
 ```json
 {
@@ -77,4 +78,4 @@ GPLv3
 ## To do
 
 * Provide sample queries in Solr.
-* Test with bags that contain subdirectories in /data.
+* Test with Bags that contain subdirectories in /data.

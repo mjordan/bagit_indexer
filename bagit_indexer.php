@@ -57,7 +57,6 @@ foreach ($bag_paths as $bag_path) {
     }
 
     $manifest = $bag->manifest;
-    // We don't want these two bits of info.
     unset($manifest->pathPrefix);
     $manifest->fileName = basename($manifest->fileName);
 
