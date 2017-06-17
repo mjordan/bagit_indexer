@@ -32,7 +32,14 @@ Run `php bagit_indexer.php --help` to get help info:
      Required. Absolute or relative path to the directory where the JSON documents will be saved. Trailing slash is optional.
 ```
 
-Basically, all you need is some Bags (serialized or loose) in your input directory. Running the tool produces a JSON file like this one for each input Bag:
+Basically, all you need is some Bags (serialized or loose) in your input directory. Running the tool like this:
+
+```
+php bagit_indexer.php -i /home/mark/bags -o /tmp/output
+====================================================================================================> 100%
+Done. JSON files for indexing are in /tmp/output
+```
+produces a JSON file in the output directory like this one for each input Bag:
 
 ```json
 {
