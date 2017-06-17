@@ -1,0 +1,12 @@
+{
+    "name": "BagIt Indexer",
+    "license": "GPL-3.0",
+    "type": "project",
+    "description": "Tool for indexing Bags",
+    "require": {
+        "php": ">=5.5.0",
+        "scholarslab/bagit": "~0.3",
+        "nategood/commando": "*",
+        "league/climate":"~3.1"
+    }
+}
