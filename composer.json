@@ -7,6 +7,7 @@
         "php": ">=5.5.0",
         "scholarslab/bagit": "~0.3",
         "nategood/commando": "*",
-        "league/climate":"~3.1"
+        "league/climate":"~3.1",
+        "guzzlehttp/guzzle": "~6.0"
     }
 }

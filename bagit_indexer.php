@@ -7,6 +7,10 @@
  */
 
 require 'vendor/autoload.php';
+use GuzzleHttp\Client;
+use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Psr7;
 require_once 'vendor/scholarslab/bagit/lib/bagit.php';
 
 $cmd = new Commando\Command();
@@ -21,14 +25,14 @@ $cmd->option('i')
           return false;
       }
 });
-$cmd->option('o')
-  ->aka('output')
-  ->require(true)
-  ->describedAs('Absolute or relative path to the directory where the JSON documents will be saved. Trailing slash is optional.');
-
-if (!file_exists($cmd['output'])) {
-  mkdir($cmd['output']);
-}
+$cmd->option('e')
+  ->aka('elasticsearch_url')
+  ->describedAs('URL (including port number) of your Elasticsearch endpoint. Default is "http://localhost:9200".')
+  ->default('http://localhost:9200');
+$cmd->option('x')
+  ->aka('elasticsearch_index')
+  ->describedAs('Elasticsearch index. Default is "bags".')
+  ->default('bags');
 
 $all_files = scandir($cmd['input']);
 $bags = array_diff($all_files, array('.', '..'));
@@ -42,18 +46,22 @@ $climate = new League\CLImate\CLImate;
 $bag_num = 0;
 $progress = $climate->progress()->total(count($bag_paths));
 
+$index['source_path'] = realpath($cmd['input']);
+
 foreach ($bag_paths as $bag_path) {
   if (is_file($bag_path)) {
     $bag = new BagIt($bag_path);
 
-    $index = array('id' => pathinfo($bag_path, PATHINFO_FILENAME));
+
+    // $index = array('id' => pathinfo($bag_path, PATHINFO_FILENAME));
     $index['bagit_version'] = $bag->bagVersion;
     $bag->fetch->fileName = basename($bag->fetch->fileName);
     $index['fetch'] = $bag->fetch;
 
     $bag_info = array();
-    foreach ($bag->bagInfoData as $tag => $value) {
-      $index['bag-info'][$tag] = $value;
+    foreach ($bag->bagInfoData as $tag => &$value) {
+      $trimmed_tag = trim($tag); 
+      $index['bag-info'][$trimmed_tag] = trim($value);
     }
 
     $manifest = $bag->manifest;
@@ -62,12 +70,22 @@ foreach ($bag_paths as $bag_path) {
 
     $index['manifest'] = $manifest;
 
-    $output_file_path = $cmd['output'] . DIRECTORY_SEPARATOR . pathinfo($bag_path, PATHINFO_FILENAME) . '.json';
-    file_put_contents($output_file_path, json_encode($index));
+    $client = new Client([
+      'base_uri' => $cmd['elasticsearch_url'],
+      ['headers' => ['Content-type' => 'application/json']],
+      ]);
+    try {
+      $request = new Request('POST', $cmd['elasticsearch_index'] . '/bag/' . pathinfo($bag_path, PATHINFO_FILENAME));
+      $response = $client->send($request, ['body' => json_encode($index)]);
+    }
+    catch (ClientException $e) {
+      print Psr7\str($e->getRequest());
+      print Psr7\str($e->getResponse());
+    }
   }
 
   $bag_num++;
   $progress->current($bag_num);
 }
 
-print "Done. JSON files for indexing are in " . $cmd['output'] . PHP_EOL;
+print "Done. " . $bag_num . " Bags added to " . $cmd['elasticsearch_url'] . '/' . $cmd['elasticsearch_index'] . PHP_EOL;
