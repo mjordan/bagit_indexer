@@ -101,7 +101,11 @@ The `bagit_searcher.php` script allows you to perform simple queries against the
 * 'filename', which queries filepaths of files in the Bag's `/data` directory
 * 'source_path', which queries filepaths of the Bag's source path, which is the value provided to `bagit_indexer.php`'s `-input` option when the index was populated
 
-For example, to search for the phrase "cold storage" in the description, run the command `php bagit_searcher.php -q "description:cold storage", which will return the following results (note that quotes are required because of the space):
+For example, to search for the phrase "cold storage" in the description, run the command:
+
+```php bagit_searcher.php -q "description:cold storage"```
+
+which will return the following results (note that quotes are required because of the space):
 
 ```
 Your query found 2 hits: 
@@ -109,7 +113,11 @@ bag_01
 bag_02
 ```
 
-To search for Bags that have a Bagging-Date of "2016-02-28", run this command: `php bagit_searcher.php -q date:2016-02-28`, which will return the following result:
+To search for Bags that have a Bagging-Date of "2016-02-28", run this command:
+
+```php bagit_searcher.php -q date:2016-02-28```
+
+which will return the following result:
 
 ```
 Your query found 1 hits: 
@@ -125,31 +133,51 @@ Here are the values from the `bag-info.txt` files for the sample Bags, in case y
   * Internal-Sender-Identifier: Bag_01
   * Source-Organization: Bags R Us
   * Contact-Email: contact@bagrus.com
+  * Files
+    * data/anotherkindoffile.dat
+    * data/anothertextfile.txt
+    * data/atextfile.txt
 * bag_01002
   * External-Description: The content we said we would send you.
   * Bagging-Date	: 2017-06-18
   * Internal-Sender-Identifier: bag_01002
   * Source-Organization: Acme Bags
   * Contact-Email: info@acmebags.com
+  * Files
+    * data/anothertextfile.txt
+    * data/atextfile-09910.txt
+    * data/important.xxx
 * bag_02
   * External-Description: Contains some stuff we want to put into cold storage, and that is very important.
   * Bagging-Date	: 2017-06-18
   * Internal-Sender-Identifier: Bag_02
   * Source-Organization: Bags R Us
   * Contact-Email: contact@bagrus.com
+  * Files
+    * data/anothertextfile.txt
+    * data/atextfile-2.txt
+    * data/data_2.dat
+    * data/subdir/data_3.dat
 * bag_03
   * External-Description: A simple bag.
   * Bagging-Date	: 2016-02-28
   * Internal-Sender-Identifier: bag_03
   * Source-Organization: Acme Bags
   * Contact-Email: info@acmebags.com
+  * Files
+    * data/atextfile.txt
+    * data/master.tif
+    * data/metadata.xml
 * bag_z2098-4
   * External-Description: The content we said we would send you.
   * Bagging-Date	: 2017-06-18
   * Internal-Sender-Identifier: bag_z2098-4
   * Source-Organization: Acme Bags
   * Contact-Email: info@acmebags.com
-
+  * Files
+    * data/1/acontentfile.txt
+    * data/2/acontentfile.txt
+    * data/3/acontentfile.txt
 
 ## License
 
@@ -158,4 +186,4 @@ GPLv3
 ## To do
 
 * Add logging of indexing and errors
-* Get 'filename' and 'source_path' queries to work
+* Get 'filename' and 'source_path' queries, and date ranges, to work
