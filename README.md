@@ -7,6 +7,7 @@ A proof-of-concept tool for extracting data from Bags and indexing it in Elastic
 * PHP 5.5.0 or higher.
 * [Composer](https://getcomposer.org)
 * An [Elasticsearch server](https://www.elastic.co/products/elasticsearch) version 5.x or higher.
+  * Scripts in the 'vagrant' directory will help you set up an Elasticsearch instance for testing.
 
 To install the Bagit Indexer:
 
@@ -21,17 +22,14 @@ This tool extracts data from Bags and pushes the data into Elasticsearch.
 Run `php bagit_indexer.php --help` to get help info:
 
 ```
--e/--elasticsearch_url <argument>
-     URL (including port number) of your Elasticsearch endpoint. Default is "http://localhost:9200".
-
-
--x/--elasticsearch_index <argument>
-     Elasticsearch index. Default is "bags".
-
-
 --help
      Show the help page for this command.
 
+-e/--elasticsearch_url <argument>
+     URL (including port number) of your Elasticsearch endpoint. Default is "http://localhost:9200".
+
+-x/--elasticsearch_index <argument>
+     Elasticsearch index. Default is "bags".
 
 -i/--input <argument>
      Required. Absolute or relative path to a directory containing Bags. Trailing slash is optional.
@@ -99,4 +97,5 @@ GPLv3
 ## To do
 
 * Provide more example queries
+* Provide a simple query script.
 * Add logging of indexing and errors
