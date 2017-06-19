@@ -23,6 +23,8 @@ $cmd->option('x')
   ->describedAs('Elasticsearch index. Default is "bags".')
   ->default('bags');
 
+$climate = new League\CLImate\CLImate;
+
 $hosts = array($cmd['e']);
 
 $clientBuilder = ClientBuilder::create();
@@ -66,9 +68,28 @@ $params = [
 $results = $client->search($params);
 if ($results['hits']['total'] > 0) {
   print "Your query found " . $results['hits']['total'] . " hit(s): " . PHP_EOL;
+  $table_data = array();
   foreach ($results['hits']['hits'] as $hit) {
-    print $hit['_id'] . PHP_EOL;
+    // print $hit['_id'] . PHP_EOL;
+    switch ($field) {
+      case 'description':
+      $table_data[] = array('Bag ID' => $hit['_id'], 'External-Description' => $hit['_source']['bag-info']['External-Description']);
+      break;
+    case 'date':
+      $table_data[] = array('Bag ID' => $hit['_id'], 'Bagging-Date' => $hit['_source']['bag-info']['Bagging-Date']);
+      break;
+    case 'org':
+      $table_data[] = array('Bag ID' => $hit['_id'], 'Bagging-Date' => $hit['_source']['bag-info']['Source-Organization']);
+      break;
+    case 'file':
+      $table_data[] = array('Bag ID' => $hit['_id'], 'Data files' => implode(", ", $hit['_source']['data_files']));
+      break;
+    case 'source_path':
+      $table_data[] = array('Bag ID' => $hit['_id'], 'Source path' => $hit['_source']['source_path']);
+      break;
+    }
   }
+  $climate->table($table_data);
 }
 else {
   print "Your query found no hits. Sorry." . PHP_EOL;

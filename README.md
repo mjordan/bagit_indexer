@@ -1,13 +1,20 @@
 # BagIt Indexer
 
-A proof-of-concept tool for extracting data from Bags and indexing it in Elasticsearch. Its purpose is to demonstrate some techniques for managing Bags.
+A proof-of-concept tool for extracting data from Bags and indexing it in Elasticsearch. Its purpose is to demonstrate some techniques for managing Bags. For example, some questions you can ask of the indexed data are:
+
+* I want to know which Bags were created on a specific date
+* I want to know which Bags contain a specific file in their `/data` directory
+* I want to know which Bags have specific keywords in their description
+* I want to know which Bags have any `fetch` URLs
+* I want to find all Bags with a specific Bagit version
+* I have a Bag's filename and I want to find what source directory the Bag is in
 
 ## System requirements and installation
 
 * PHP 5.5.0 or higher.
 * [Composer](https://getcomposer.org)
 * An [Elasticsearch server](https://www.elastic.co/products/elasticsearch) version 5.x or higher.
-  * Scripts in the 'vagrant' directory will help you set up an Elasticsearch instance for testing.
+  * The scripts in the 'vagrant' directory will help you set up an Elasticsearch instance for testing.
 
 To install the Bagit Indexer:
 
@@ -35,7 +42,7 @@ Run `php bagit_indexer.php --help` to get help info:
      Elasticsearch index. Default is "bags".
 ```
 
-Basically, all you need is some Bags (serialized or loose) in your input directory. Running the tool like this:
+To index Bags (serialized or loose) in your input directory, run the `bagit_indexer` script like this:
 
 ```
 php bagit_indexer.php -i sample_bags
@@ -108,9 +115,14 @@ For example, to search for the phrase "cold storage" in the description, run the
 which will return the following results:
 
 ```
-Your query found 2 hits: 
-bag_01
-bag_02
+Your query found 2 hit(s): 
+----------------------------------------------------------------------------------------------
+| Bag ID | External-Description                                                              |
+==============================================================================================
+| bag_01 | Contains some stuff we want to put into cold storage.                             |
+----------------------------------------------------------------------------------------------
+| bag_02 | Contains some stuff we want to put into cold storage, and that is very important. |
+----------------------------------------------------------------------------------------------
 ```
 
 To search for Bags that have a Bagging-Date of "2016-02-28", run this command:
@@ -120,8 +132,12 @@ To search for Bags that have a Bagging-Date of "2016-02-28", run this command:
 which will return the following result:
 
 ```
-Your query found 1 hits: 
-bag_03
+Your query found 1 hit(s): 
+-------------------------
+| Bag ID | Bagging-Date |
+=========================
+| bag_03 | 2016-02-28   |
+-------------------------
 ```
 
 To search for Bags that contain a file under `/data` named 'master.tif', run this command:
@@ -132,7 +148,11 @@ which will return the following result:
 
 ```
 Your query found 1 hit(s): 
-bag_03
+-------------------------------------------------------------------
+| Bag ID | Data files                                             |
+===================================================================
+| bag_03 | data/atextfile.txt, data/master.tif, data/metadata.xml |
+-------------------------------------------------------------------
 ```
 
 Here are the values from `bag-info.txt` tags and the list of files in the `/data` directories for the sample Bags, in case you want to try some searches of your own:
@@ -195,4 +215,5 @@ GPLv3
 
 ## To do
 
+* Validate Bags before indexing them
 * Add logging of indexing and errors
