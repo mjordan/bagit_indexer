@@ -45,49 +45,110 @@ Done. 5 Bags added to http://localhost:9200/bags
 indexes each Bag in your Elasticsearch instance, resulting in an Elasticsarch document for each Bag like this:
 
 ```json
-      {
-        "_index" : "bags",
-        "_type" : "bag",
-        "_id" : "bag_z2098-4",
-        "_score" : 1.0,
-        "_source" : {
-          "source_path" : "/home/mark/Documents/hacking/bagit/bagit_indexer/sample_bags",
-          "bagit_version" : {
-            "major" : 0,
-            "minor" : 96
-          },
-          "fetch" : {
-            "fileName" : "fetch.txt",
-            "data" : [ ],
-            "fileEncoding" : "UTF-8"
-          },
-          "bag-info" : {
-            "External-Description" : "The content we said we would send you.",
-            "Bagging-Date" : "2017-06-18",
-            "Internal-Sender-Identifier" : "bag_z2098-4",
-            "Source-Organization" : "Acme Bags",
-            "Contact-Email" : "info@acmebags.com"
-          },
-          "manifest" : {
-            "fileName" : "manifest-sha1.txt",
-            "hashEncoding" : "sha1",
-            "fileEncoding" : "UTF-8",
-            "data" : {
-              "data/1/acontentfile.txt" : "a934ca8815f92c1930159df75168847a109d18ac",
-              "data/2/acontentfile.txt" : "a934ca8815f92c1930159df75168847a109d18ac",
-              "data/3/acontentfile.txt" : "a934ca8815f92c1930159df75168847a109d18ac"
-            }
-          }
-        }
+{
+   "_index":"bags",
+   "_type":"bag",
+   "_id":"bag_02",
+   "_score":1.0,
+   "_source":{
+      "source_path":"/home/mark/Documents/hacking/bagit/bagit_indexer/sample_bags",
+      "bagit_version":{
+         "major":0,
+         "minor":96
+      },
+      "fetch":{
+         "fileName":"fetch.txt",
+         "data":[
+
+         ],
+         "fileEncoding":"UTF-8"
+      },
+      "bag-info":{
+         "External-Description":"Contains some stuff we want to put into cold storage, and that is very important.",
+         "Bagging-Date":"2017-06-18",
+         "Internal-Sender-Identifier":"Bag_02",
+         "Source-Organization":"Bags R Us",
+         "Contact-Email":"contact@bagrus.com"
+      },
+      "data_files":[
+         "data/anothertextfile.txt",
+         "data/atextfile-2.txt",
+         "data/data_2.dat",
+         "data/subdir/data_3.dat"
+      ],
+      "manifest":{
+         "fileName":"manifest-sha1.txt",
+         "hashEncoding":"sha1",
+         "fileEncoding":"UTF-8",
+         "data":{
+            "data/anothertextfile.txt":"eb2614a66a1d34a6d007139864a1a9679c9b96aa",
+            "data/atextfile-2.txt":"eb2614a66a1d34a6d007139864a1a9679c9b96aa",
+            "data/data_2.dat":"3f8aef7161402b58c261c4a9778c27203e276593",
+            "data/subdir/data_3.dat":"3f8aef7161402b58c261c4a9778c27203e276593"
+         }
       }
+   }
+}
 ```
 
 ## Sample queries
 
-* Find Bags with a Bagging-Date tag value of `2017-06-17`
-  * `curl -v  'http://localhost:9200/bags/_search?q=bag-info.Bagging-Date:2017-06-17'`
-* Find Bags with a Contact-Name tag value of `Mark Jordan'
-  * `curl -v  'http://localhost:9200/bags/_search?q=bag-info.Contact-name:Mark+Jordan'`
+The `bagit_searcher.php` script allows you to perform simple queries against the indexed data. The following types of queries are possible using this script:
+
+* 'description', which queries the contents of the `bag-info.txt` 'External-Description' tag
+* 'date', which queries the contents of the `bag-info.txt` 'Bagging-Date' tag
+* 'org', which queries the contents of the `bag-info.txt` 'Source-Organization' tag
+* 'filename', which queries filepaths of files in the Bag's `/data` directory
+* 'source_path', which queries filepaths of the Bag's source path, which is the value provided to `bagit_indexer.php`'s `-input` option when the index was populated
+
+For example, to search for the phrase "cold storage" in the description, run the command `php bagit_searcher.php -q "description:cold storage", which will return the following results (note that quotes are required because of the space):
+
+```
+Your query found 2 hits: 
+bag_01
+bag_02
+```
+
+To search for Bags that have a Bagging-Date of "2016-02-28", run this command: `php bagit_searcher.php -q date:2016-02-28`, which will return the following result:
+
+```
+Your query found 1 hits: 
+bag_03
+```
+
+
+Here are the values from the `bag-info.txt` files for the sample Bags, in case you want to try some searches of your own:
+
+* bag_01
+  * External-Description: Contains some stuff we want to put into cold storage.
+  * Bagging-Date	: 2017-06-18
+  * Internal-Sender-Identifier: Bag_01
+  * Source-Organization: Bags R Us
+  * Contact-Email: contact@bagrus.com
+* bag_01002
+  * External-Description: The content we said we would send you.
+  * Bagging-Date	: 2017-06-18
+  * Internal-Sender-Identifier: bag_01002
+  * Source-Organization: Acme Bags
+  * Contact-Email: info@acmebags.com
+* bag_02
+  * External-Description: Contains some stuff we want to put into cold storage, and that is very important.
+  * Bagging-Date	: 2017-06-18
+  * Internal-Sender-Identifier: Bag_02
+  * Source-Organization: Bags R Us
+  * Contact-Email: contact@bagrus.com
+* bag_03
+  * External-Description: A simple bag.
+  * Bagging-Date	: 2016-02-28
+  * Internal-Sender-Identifier: bag_03
+  * Source-Organization: Acme Bags
+  * Contact-Email: info@acmebags.com
+* bag_z2098-4
+  * External-Description: The content we said we would send you.
+  * Bagging-Date	: 2017-06-18
+  * Internal-Sender-Identifier: bag_z2098-4
+  * Source-Organization: Acme Bags
+  * Contact-Email: info@acmebags.com
 
 
 ## License
@@ -96,6 +157,5 @@ GPLv3
 
 ## To do
 
-* Provide more example queries
-* Provide a simple query script.
 * Add logging of indexing and errors
+* Get 'filename' and 'source_path' queries to work

@@ -1,7 +1,7 @@
 <?php
 
 /***
- * Script for parsing out data from Bags for indexing in Solr or ElasticSearch.
+ * Script for parsing out data from Bags for indexing in ElasticSearch.
  *
  * Run 'php bagit_indexer.php --help' for usage.
  */
@@ -65,6 +65,10 @@ foreach ($bag_paths as $bag_path) {
     }
 
     $manifest = $bag->manifest;
+
+    $data_files = array_keys($manifest->data);
+    $index['data_files'] = $data_files;
+
     unset($manifest->pathPrefix);
     $manifest->fileName = basename($manifest->fileName);
 
