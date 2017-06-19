@@ -1,9 +1,9 @@
 <?php
 
-/***
+/**
  * Script for querying data from Bags indexed in ElasticSearch.
  *
- * Run 'php bagit_indexer.php --help' for usage.
+ * Run 'php bagit_searcher.php --help' for usage.
  */
 
 require 'vendor/autoload.php';
@@ -41,14 +41,14 @@ switch ($field) {
   case 'org':
     $query_field = 'bag-info.Source-Organization';
     break;
-  case 'filename':
+  case 'file':
     $query_field = 'data_files';
     break;
   case 'source_path':
     $query_field = 'source_path';
     break;
   default:
-    print "Sorry, I don't recognize that field; you can use 'description', 'date', 'org', 'filename', or 'source_path'." . PHP_EOL;
+    print "Sorry, I don't recognize that field; you can use 'description', 'date', 'org', 'file', or 'source_path'." . PHP_EOL;
     exit;
 }
 
@@ -65,7 +65,7 @@ $params = [
 // Get the results and show them to the user.
 $results = $client->search($params);
 if ($results['hits']['total'] > 0) {
-  print "Your query found " . $results['hits']['total'] . " hits: " . PHP_EOL;
+  print "Your query found " . $results['hits']['total'] . " hit(s): " . PHP_EOL;
   foreach ($results['hits']['hits'] as $hit) {
     print $hit['_id'] . PHP_EOL;
   }

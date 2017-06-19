@@ -1,17 +1,17 @@
 <?php
 
-/***
+/**
  * Script for parsing out data from Bags for indexing in ElasticSearch.
  *
  * Run 'php bagit_indexer.php --help' for usage.
  */
 
 require 'vendor/autoload.php';
+require 'vendor/scholarslab/bagit/lib/bagit.php';
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Psr7;
-require_once 'vendor/scholarslab/bagit/lib/bagit.php';
 
 $cmd = new Commando\Command();
 $cmd->option('i')
@@ -52,8 +52,6 @@ foreach ($bag_paths as $bag_path) {
   if (is_file($bag_path)) {
     $bag = new BagIt($bag_path);
 
-
-    // $index = array('id' => pathinfo($bag_path, PATHINFO_FILENAME));
     $index['bagit_version'] = $bag->bagVersion;
     $bag->fetch->fileName = basename($bag->fetch->fileName);
     $index['fetch'] = $bag->fetch;
@@ -66,11 +64,11 @@ foreach ($bag_paths as $bag_path) {
 
     $manifest = $bag->manifest;
 
-    $data_files = array_keys($manifest->data);
-    $index['data_files'] = $data_files;
-
     unset($manifest->pathPrefix);
     $manifest->fileName = basename($manifest->fileName);
+
+    $data_files = array_keys($manifest->data);
+    $index['data_files'] = $data_files;
 
     $index['manifest'] = $manifest;
 
