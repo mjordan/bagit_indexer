@@ -70,7 +70,6 @@ if ($results['hits']['total'] > 0) {
   print "Your query found " . $results['hits']['total'] . " hit(s): " . PHP_EOL;
   $table_data = array();
   foreach ($results['hits']['hits'] as $hit) {
-    // print $hit['_id'] . PHP_EOL;
     switch ($field) {
       case 'description':
       $table_data[] = array('Bag ID' => $hit['_id'], 'External-Description' => $hit['_source']['bag-info']['External-Description']);

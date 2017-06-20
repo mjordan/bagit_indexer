@@ -23,6 +23,7 @@ Further possiblities include:
 
 * On moving Bags to a different storage location, update their "source_path" values in the Elasticsearch index
 * Develop a desktop or web-based app that performs functions similar to this command-line tool
+* Validate the Bags before they are indexed and log any validation errors; also log errors indexing in Elasticsearch
 
 ## System requirements and installation
 
