@@ -3,7 +3,7 @@
 A proof-of-concept tool for extracting data from Bags and indexing it in Elasticsearch. Its purpose is to demonstrate potential techniques for managing Bags. For example, questions you can ask of the indexed data include:
 
 * which Bags were created on a specific date
-* which Bags contain a specific file in their `/data` directory
+* which Bags contain a specific file in their `data` directory
 * which Bags have specific keywords in their description
 * which Bags were created by a specific organization
 
@@ -22,12 +22,12 @@ With a little more developement beyond this proof of concept, you could ask ques
 Further possiblities include:
 
 * On moving Bags to a different storage location, update their "source_path" values in the Elasticsearch index
-* Develop a desktop or web-based app that performs functions similar to this command-line tool
 * Validate the Bags before they are indexed and log any validation errors; also log errors indexing in Elasticsearch
+* Develop a desktop or web-based app that performs functions similar to this command-line tool
 
 ## System requirements and installation
 
-* PHP 5.5.0 or higher.
+* PHP 5.5.0 or higher command-line interface
 * [Composer](https://getcomposer.org)
 * An [Elasticsearch server](https://www.elastic.co/products/elasticsearch) version 5.x or higher.
   * The scripts in the 'vagrant' directory will help you set up an Elasticsearch instance for testing.
@@ -117,15 +117,15 @@ This indexing results in an Elasticsarch document for each Bag like this:
 
 ## Finding Bags
 
-The `bagit_searcher.php` script allows you to perform simple queries against the indexed data. The following types of queries are possible using this script:
+The `bagit_searcher.php` script allows you to perform simple queries against the indexed data. The following types of queries are possible:
 
 * 'description', which queries the contents of the `bag-info.txt` 'External-Description' tag
 * 'date', which queries the contents of the `bag-info.txt` 'Bagging-Date' tag
 * 'org', which queries the contents of the `bag-info.txt` 'Source-Organization' tag
-* 'file', which queries filepaths of files in the Bag's `/data` directory
+* 'file', which queries filepaths of files in the Bag's `data` directory
 * 'source_path', which queries filepaths of the Bag's source path, which is the value provided to `bagit_indexer.php`'s `-input` option when the index was populated
 
-For example, to search for the phrase "cold storage" in the description, run the command (note that quotes are required because of the space in the query):
+Queries take the form `-q field:query`. For example, to search for the phrase "cold storage" in the description, run the command (note that quotes are required because of the space in the query):
 
 ```php bagit_searcher.php -q "description:cold storage"```
 
@@ -163,7 +163,7 @@ Your query found 4 hit(s):
 ------------------------------
 ```
 
-To search for Bags that contain a file under `/data` named 'master.tif', run this command:
+To search for Bags that contain a file under `data` named 'master.tif', run this command:
 
 ```php bagit_searcher.php -q file:master.tif```
 
@@ -178,7 +178,7 @@ Your query found 1 hit(s):
 -------------------------------------------------------------------
 ```
 
-Here are the values from `bag-info.txt` tags and the list of files in the `/data` directories for the sample Bags, in case you want to try some searches of your own:
+Here are the values from `bag-info.txt` tags and the list of files in the `data` directories for the sample Bags, in case you want to try some searches of your own:
 
 * bag_01
   * External-Description: Contains some stuff we want to put into cold storage.
