@@ -1,6 +1,6 @@
 # BagIt Indexer
 
-A proof-of-concept tool for extracting data from Bags and indexing it in Elasticsearch. Its purpose is to demonstrate potential techniques for managing Bags. For example, questions you can ask of the indexed data include:
+A proof-of-concept tool for extracting data from [Bags](https://en.wikipedia.org/wiki/BagIt) and indexing it in Elasticsearch. Its purpose is to demonstrate potential techniques for managing Bags. For example, questions you can ask of the sample data in this Git repository include:
 
 * which Bags were created on a specific date
 * which Bags contain a specific file in their `data` directory
@@ -63,6 +63,11 @@ To index Bags (serialized or loose) in your input directory, run the `bagit_inde
 
 ```
 php bagit_indexer.php -i sample_bags
+```
+
+You will see the following:
+
+```
 ====================================================================================================> 100%
 Done. 5 Bags added to http://localhost:9200/bags
 ```
