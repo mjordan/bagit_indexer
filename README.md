@@ -1,13 +1,28 @@
 # BagIt Indexer
 
-A proof-of-concept tool for extracting data from Bags and indexing it in Elasticsearch. Its purpose is to demonstrate some techniques for managing Bags. For example, some questions you can ask of the indexed data are:
+A proof-of-concept tool for extracting data from Bags and indexing it in Elasticsearch. Its purpose is to demonstrate some techniques for managing Bags. For example, questions you can ask of the indexed data include:
 
-* I want to know which Bags were created on a specific date
-* I want to know which Bags contain a specific file in their `/data` directory
-* I want to know which Bags have specific keywords in their description
-* I want to know which Bags have any `fetch` URLs
+* which Bags were created on a specific date
+* which Bags contain a specific file in their `/data` directory
+* which Bags have specific keywords in their description
+* which Bags were created by a specific organization
+
+With a little more developement beyond this proof of concept, you could ask questions like:
+
+* I want to know which Bags were created between two dates
 * I want to find all Bags with a specific Bagit version
-* I have a Bag's filename and I want to find what source directory the Bag is in
+* I want to know which Bags have `fetch` URLs
+* I want to know which Bags have `fetch` URLs that point to a specific hostname
+* I have a Bag's identifier and I want to find what source directory the Bag is in
+* I have a file, and I want to query Elasticsearch to see if its SHA-1 (or other) hash matches any that are in Bag
+* I want to know which Bags have a 'Bag-Group-Identifier' tag that contains the ID of a specific collection
+* I want to know which Bags use a specific [BagIt profile](https://github.com/ruebot/bagit-profiles)
+* I want to know which Bags contain a specific file that is not managed by the Bag (e.g., "DC.xml" in the root of the Bag)
+
+Further possiblities include:
+
+* On moving Bags to a different storage location, update their "source_path" values in the Elasticsearch index
+* Develop a desktop or web-based app that performs functions similar to this command-line tool
 
 ## System requirements and installation
 
@@ -24,7 +39,7 @@ To install the Bagit Indexer:
 
 ## Indexing Bags
 
-This tool extracts data from Bags and pushes the data into Elasticsearch.
+`bagit_indexer.php` extracts data from Bags and pushes it into Elasticsearch.
 
 Run `php bagit_indexer.php --help` to get help info:
 
@@ -49,7 +64,7 @@ php bagit_indexer.php -i sample_bags
 ====================================================================================================> 100%
 Done. 5 Bags added to http://localhost:9200/bags
 ```
-indexes each Bag in your Elasticsearch instance, resulting in an Elasticsarch document for each Bag like this:
+This indexing results in an Elasticsarch document for each Bag like this:
 
 ```json
 {
@@ -213,7 +228,8 @@ Here are the values from `bag-info.txt` tags and the list of files in the `/data
 
 GPLv3
 
-## To do
+## Contributing
 
-* Validate Bags before indexing them
-* Add logging of indexing and errors
+Since this is proof-of-concept code, I don't intend to add a lot more features. However, this proof of concept could be used as the basis for a production application. Fork and enjoy!
+
+That said, if you have any questions or suggestions, feel free to open an issue.
