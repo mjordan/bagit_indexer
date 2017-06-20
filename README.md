@@ -1,6 +1,6 @@
 # BagIt Indexer
 
-A proof-of-concept tool for extracting data from Bags and indexing it in Elasticsearch. Its purpose is to demonstrate some techniques for managing Bags. For example, questions you can ask of the indexed data include:
+A proof-of-concept tool for extracting data from Bags and indexing it in Elasticsearch. Its purpose is to demonstrate potential techniques for managing Bags. For example, questions you can ask of the indexed data include:
 
 * which Bags were created on a specific date
 * which Bags contain a specific file in their `/data` directory
@@ -30,6 +30,7 @@ Further possiblities include:
 * [Composer](https://getcomposer.org)
 * An [Elasticsearch server](https://www.elastic.co/products/elasticsearch) version 5.x or higher.
   * The scripts in the 'vagrant' directory will help you set up an Elasticsearch instance for testing.
+* Some Bags. The samples used in this README are in the 'sample_bags' directory.
 
 To install the Bagit Indexer:
 
@@ -140,19 +141,25 @@ Your query found 2 hit(s):
 ----------------------------------------------------------------------------------------------
 ```
 
-To search for Bags that have a Bagging-Date of "2016-02-28", run this command:
+To search for Bags that have a Bagging-Date of "2017-06-18", run this command:
 
-```php bagit_searcher.php -q date:2016-02-28```
+```php bagit_searcher.php -q date:2017-06-18```
 
 which will return the following result:
 
 ```
-Your query found 1 hit(s): 
--------------------------
-| Bag ID | Bagging-Date |
-=========================
-| bag_03 | 2016-02-28   |
--------------------------
+Your query found 4 hit(s): 
+------------------------------
+| Bag ID      | Bagging-Date |
+==============================
+| bag_01002   | 2017-06-18   |
+------------------------------
+| bag_02      | 2017-06-18   |
+------------------------------
+| bag_01      | 2017-06-18   |
+------------------------------
+| bag_z2098-4 | 2017-06-18   |
+------------------------------
 ```
 
 To search for Bags that contain a file under `/data` named 'master.tif', run this command:
