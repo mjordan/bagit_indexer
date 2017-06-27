@@ -52,6 +52,20 @@ foreach ($bag_paths as $bag_path) {
   if (is_file($bag_path)) {
     $bag = new BagIt($bag_path);
 
+    $errors = $bag->validate();
+    if (count($errors) === 0) {
+      $index['bag_validated']['timestamp'] = gmdate("Y-m-d\TH:i:s\Z");
+      $index['bag_validated']['result'] = 'valid';
+    } else {
+      $index['bag_validated']['timestamp'] = gmdate("Y-m-d\TH:i:s\Z");
+      $index['bag_validated']['result'] = 'invalid';
+      $index['bag_validated']['errors'][] = $errors;
+    }
+
+    $bag_sha1 = sha1_file($bag_path);
+    $index['bag_hash']['type'] = 'sha1';
+    $index['bag_hash']['value'] = $bag_sha1;
+
     $index['bagit_version'] = $bag->bagVersion;
     $bag->fetch->fileName = basename($bag->fetch->fileName);
     $index['fetch'] = $bag->fetch;

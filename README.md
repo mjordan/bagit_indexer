@@ -23,8 +23,9 @@ Further possiblities include:
 
 - [ ] On moving Bags to a different storage location, update their "bag_location" values in the Elasticsearch index
 - [ ] Add the ability to index specific data files within the Bags, to assist in discovery and management
-- [ ] Validate the Bags before they are indexed and log (and possibly index in Elasticsearch) any validation errors; also log errors indexing in Elasticsearch
-- [ ] On indexing, generate a SHA-1 or other checksum of the serialized Bag itself and add it to the Elasticsearch index, to assist in bit-level integrity checking of the Bag itself
+- [x] Validate the Bags before they are indexed and index in Elasticsearch any validation errors
+- [ ] Log errors indexing in Elasticsearch
+- [x] On indexing, generate a SHA-1 or other checksum of the serialized Bag itself and add it to the Elasticsearch index, to assist in bit-level integrity checking of the Bag itself
 - [ ] Develop a desktop or web-based app that performs functions similar to this command-line tool
 
 ## System requirements and installation
@@ -83,6 +84,14 @@ This indexing results in an Elasticsarch document for each Bag like this:
    "_score":1.0,
    "_source":{
       "bag_location":"/home/mark/Documents/hacking/bagit/bagit_indexer/sample_bags",
+      "bag_validated" : {
+        "timestamp" : "2017-06-27T14:55:44Z",
+        "result" : "valid"
+      },
+      "bag_hash" : {
+        "type" : "sha1",
+        "value" : "ebd53651c768da1dbca352988e8a93d3f5f9c2d7"
+      },
       "bagit_version":{
          "major":0,
          "minor":96
