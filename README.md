@@ -23,9 +23,9 @@ Further possiblities include:
 
 - [ ] On moving Bags to a different storage location, update their "bag_location" values in the Elasticsearch index
 - [ ] Add the ability to index specific data files within the Bags, to assist in discovery and management
-- [x] Validate the Bags before they are indexed and index in Elasticsearch any validation errors
-- [ ] Log errors indexing in Elasticsearch
+- [x] On indexing, validate the Bags index any validation errors in Elasticsearch
 - [x] On indexing, generate a SHA-1 or other checksum of the serialized Bag itself and add it to the Elasticsearch index, to assist in bit-level integrity checking of the Bag itself
+- [ ] Log indexing errors
 - [ ] Develop a desktop or web-based app that performs functions similar to this command-line tool
 
 ## System requirements and installation
