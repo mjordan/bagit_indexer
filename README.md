@@ -22,6 +22,7 @@ With a little more developement beyond this proof of concept, you could ask ques
 Further possiblities include:
 
 * On moving Bags to a different storage location, update their "source_path" values in the Elasticsearch index
+* Add the ability to index specific data files within the Bags, to assist in discovery and management
 * Validate the Bags before they are indexed and log any validation errors; also log errors indexing in Elasticsearch
 * Develop a desktop or web-based app that performs functions similar to this command-line tool
 
