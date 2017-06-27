@@ -21,7 +21,7 @@ With a little more developement beyond this proof of concept, you could ask ques
 
 Further possiblities include:
 
-* On moving Bags to a different storage location, update their "source_path" values in the Elasticsearch index
+* On moving Bags to a different storage location, update their "bag_location" values in the Elasticsearch index
 * Add the ability to index specific data files within the Bags, to assist in discovery and management
 * Validate the Bags before they are indexed and log any validation errors; also log errors indexing in Elasticsearch
 * Develop a desktop or web-based app that performs functions similar to this command-line tool
@@ -81,7 +81,7 @@ This indexing results in an Elasticsarch document for each Bag like this:
    "_id":"bag_02",
    "_score":1.0,
    "_source":{
-      "source_path":"/home/mark/Documents/hacking/bagit/bagit_indexer/sample_bags",
+      "bag_location":"/home/mark/Documents/hacking/bagit/bagit_indexer/sample_bags",
       "bagit_version":{
          "major":0,
          "minor":96
@@ -129,7 +129,7 @@ The `bagit_searcher.php` script allows you to perform simple queries against the
 * 'date', which queries the contents of the `bag-info.txt` 'Bagging-Date' tag
 * 'org', which queries the contents of the `bag-info.txt` 'Source-Organization' tag
 * 'file', which queries filepaths of files in the Bag's `data` directory
-* 'source_path', which queries filepaths of the Bag's source path, which is the value provided to `bagit_indexer.php`'s `-input` option when the index was populated
+* 'bag_location', which queries filepaths of the Bag's source path, which is the value provided to `bagit_indexer.php`'s `-input` option when the index was populated
 
 Queries take the form `-q field:query`. For example, to search for the phrase "cold storage" in the description, run the command (note that quotes are required because of the space in the query):
 

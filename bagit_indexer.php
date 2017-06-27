@@ -46,7 +46,7 @@ $climate = new League\CLImate\CLImate;
 $bag_num = 0;
 $progress = $climate->progress()->total(count($bag_paths));
 
-$index['source_path'] = realpath($cmd['input']);
+$index['bag_location'] = realpath($cmd['input']);
 
 foreach ($bag_paths as $bag_path) {
   if (is_file($bag_path)) {

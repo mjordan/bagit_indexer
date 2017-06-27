@@ -46,11 +46,11 @@ switch ($field) {
   case 'file':
     $query_field = 'data_files';
     break;
-  case 'source_path':
-    $query_field = 'source_path';
+  case 'bag_location':
+    $query_field = 'bag_location';
     break;
   default:
-    print "Sorry, I don't recognize that field; you can use 'description', 'date', 'org', 'file', or 'source_path'." . PHP_EOL;
+    print "Sorry, I don't recognize that field; you can use 'description', 'date', 'org', 'file', or 'bag_location'." . PHP_EOL;
     exit;
 }
 
@@ -83,8 +83,8 @@ if ($results['hits']['total'] > 0) {
     case 'file':
       $table_data[] = array('Bag ID' => $hit['_id'], 'Data files' => implode(", ", $hit['_source']['data_files']));
       break;
-    case 'source_path':
-      $table_data[] = array('Bag ID' => $hit['_id'], 'Source path' => $hit['_source']['source_path']);
+    case 'bag_location':
+      $table_data[] = array('Bag ID' => $hit['_id'], 'Source path' => $hit['_source']['bag_location']);
       break;
     }
   }
