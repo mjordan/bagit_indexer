@@ -13,7 +13,7 @@ With a little more developement beyond this proof of concept, you could ask ques
 * I want to find all Bags with a specific Bagit version
 * I want to know which Bags have `fetch` URLs
 * I want to know which Bags have `fetch` URLs that point to a specific hostname
-* I have a Bag's identifier and I want to find what source directory the Bag is in
+* I have a Bag's identifier and I want to find what storage location/directory the Bag is in
 * I have a file, and I want to query Elasticsearch to see if its SHA-1 (or other) hash matches any that are in Bag
 * I want to know which Bags have a 'Bag-Group-Identifier' tag that contains the ID of a specific collection
 * I want to know which Bags use a specific [BagIt profile](https://github.com/ruebot/bagit-profiles)
@@ -23,7 +23,7 @@ Further possiblities include:
 
 * On moving Bags to a different storage location, update their "bag_location" values in the Elasticsearch index
 * Add the ability to index specific data files within the Bags, to assist in discovery and management
-* Validate the Bags before they are indexed and log any validation errors; also log errors indexing in Elasticsearch
+* Validate the Bags before they are indexed and log (and possibly index in Elasticsearch) any validation errors; also log errors indexing in Elasticsearch
 * Develop a desktop or web-based app that performs functions similar to this command-line tool
 
 ## System requirements and installation
@@ -129,7 +129,7 @@ The `bagit_searcher.php` script allows you to perform simple queries against the
 * 'date', which queries the contents of the `bag-info.txt` 'Bagging-Date' tag
 * 'org', which queries the contents of the `bag-info.txt` 'Source-Organization' tag
 * 'file', which queries filepaths of files in the Bag's `data` directory
-* 'bag_location', which queries filepaths of the Bag's source path, which is the value provided to `bagit_indexer.php`'s `-input` option when the index was populated
+* 'bag_location', which queries filepaths of the Bag's storage location, which is the value provided to `bagit_indexer.php`'s `-input` option when the index was populated
 
 Queries take the form `-q field:query`. For example, to search for the phrase "cold storage" in the description, run the command (note that quotes are required because of the space in the query):
 
