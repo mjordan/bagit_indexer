@@ -1,6 +1,8 @@
 # BagIt Indexer
 
-A proof-of-concept tool for extracting data from [Bags](https://en.wikipedia.org/wiki/BagIt) and indexing it in Elasticsearch. Its purpose is to demonstrate potential techniques for managing Bags. For example, questions you can ask of the sample data in this Git repository include:
+A proof-of-concept tool for extracting data from [Bags](https://en.wikipedia.org/wiki/BagIt) and indexing it in Elasticsearch. Its purpose is to demonstrate potential techniques for managing Bags ranging from retrieving a specific file in a Bag in response to a client requrest, to preparing for digital preservation processes such as auditing or format migrations.
+
+For example, questions you can ask of the sample data in this Git repository include:
 
 * which Bags were created on a specific date
 * which Bags contain a specific file in their `data` directory
@@ -19,7 +21,10 @@ With a little more developement beyond this proof of concept, you could ask ques
 * I want to know which Bags use a specific [BagIt profile](https://github.com/ruebot/bagit-profiles)
 * I want to know which Bags contain a specific file that is not managed by the Bag (e.g., "DC.xml" in the root of the Bag)
 
-Further possiblities include:
+Using Elasticsearch's [Kibana](https://www.elastic.co/products/kibana), it is possible to create visualizations of the indexed data. This [video](https://youtu.be/mMhnGjp8oOI) provides a useful introduction to Kibana.
+
+
+Features that may be desirable in a tool based on this proof of concept include:
 
 - [ ] On moving Bags to a different storage location, update their "bag_location" values in the Elasticsearch index
 - [ ] Add the ability to index specific data files within the Bags, to assist in discovery and management
@@ -29,6 +34,8 @@ Further possiblities include:
 - [ ] Develop a desktop or web-based app that performs functions similar to this command-line tool
 
 ## System requirements and installation
+
+To install and run this proof of concept indexer, you will need:
 
 * PHP 5.5.0 or higher command-line interface
 * [Composer](https://getcomposer.org)
@@ -130,6 +137,8 @@ This indexing results in an Elasticsarch document for each Bag like this:
    }
 }
 ```
+
+This is the data that you will be querying in the next section.
 
 ## Finding Bags
 
