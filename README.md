@@ -1,6 +1,6 @@
 # BagIt Indexer
 
-A proof-of-concept tool for extracting data from [Bags](https://en.wikipedia.org/wiki/BagIt) and indexing it in Elasticsearch. Its purpose is to demonstrate potential techniques for managing Bags ranging from retrieving a specific file in a Bag in response to a client requrest, to preparing for digital preservation processes such as auditing or format migrations.
+A proof-of-concept tool for extracting data from [Bags](https://en.wikipedia.org/wiki/BagIt) and indexing it in Elasticsearch. Its purpose is to demonstrate potential techniques for managing Bags, ranging from retrieving a specific file in a Bag to preparing for digital preservation processes such as auditing or format migrations.
 
 For example, questions you can ask of the sample data in this Git repository include:
 
@@ -259,7 +259,9 @@ Here are the values from `bag-info.txt` tags and the list of files in the `data`
 
 ## License
 
-GPLv3
+![This work is in the Public Domain](http://i.creativecommons.org/p/mark/1.0/88x31.png)
+
+To the extent possible under law, Mark Jordan has waived all copyright and related or neighboring rights to this work. This work is published from: Canada. 
 
 ## Contributing
 
