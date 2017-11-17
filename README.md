@@ -26,7 +26,10 @@ Using Elasticsearch's [Kibana](https://www.elastic.co/products/kibana), it is po
 
 Features that may be desirable in a tool based on this proof of concept include:
 
-- [ ] On moving Bags to a different storage location, update their "bag_location" values in the Elasticsearch index
+- [x] On adding new Bags to the input directory, index them automatically.
+- [ ] On moving Bags to a different storage location, or renamig them, update their "bag_location" values in the Elasticsearch index
+- [ ] On replacing (updating) Bags, update their records in the Elasticsearch index
+- [ ] On deleting Bags, replace their records in the Elasticsearch index with a tombstone
 - [ ] Add the ability to index specific data files within the Bags, to assist in discovery and management
 - [x] On indexing, validate the Bags index any validation errors in Elasticsearch
 - [x] On indexing, generate a SHA-1 or other checksum of the serialized Bag itself and add it to the Elasticsearch index, to assist in bit-level integrity checking of the Bag itself
@@ -60,7 +63,7 @@ Run `php bagit_indexer.php --help` to get help info:
      Show the help page for this command.
 
 -i/--input <argument>
-     Required. Absolute or relative path to a directory containing Bags. Trailing slash is optional.
+     Required. Absolute or relative path to either a directory containing Bags (trailing slash is optional), or a Bag filename.
 
 -e/--elasticsearch_url <argument>
      URL (including port number) of your Elasticsearch endpoint. Default is "http://localhost:9200".
@@ -256,6 +259,14 @@ Here are the values from `bag-info.txt` tags and the list of files in the `data`
     * data/1/acontentfile.txt
     * data/2/acontentfile.txt
     * data/3/acontentfile.txt
+
+## Monitoring input directories for changes
+
+The Python script `bagit_watcher.py` will monitor a directory for new Bags and index them automatically. Run it like this:
+
+`python bagit_watcher.py /path/to/input/dir`
+
+where `/path/to/input/dir` is corresponds to the `-i`/`--input` value passed to `bagit_indexer.php`. Currently the watcher only reacts to new files, but it would be possible to make it react to updated, renamed, moved, or deleted Bag files as well.
 
 ## License
 

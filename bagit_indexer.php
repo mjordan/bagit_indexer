@@ -17,7 +17,7 @@ $cmd = new Commando\Command();
 $cmd->option('i')
   ->aka('input')
   ->require(true)
-  ->describedAs('Absolute or relative path to a directory containing Bags. Trailing slash is optional.')
+  ->describedAs('Absolute or relative path to either a directory containing Bags (trailing slash is optional), or a Bag filename.')
   ->must(function ($dir_path) {
       if (file_exists($dir_path)) {
           return true;
@@ -34,12 +34,18 @@ $cmd->option('x')
   ->describedAs('Elasticsearch index. Default is "bags".')
   ->default('bags');
 
-$all_files = scandir($cmd['input']);
-$bags = array_diff($all_files, array('.', '..'));
-$bag_paths = array();
-foreach ($bags as $bag_file) {
-  $path = $cmd['input'] . DIRECTORY_SEPARATOR . $bag_file;
-  $bag_paths[] = $path;
+if (is_dir($cmd['input'])) {
+  $all_files = scandir($cmd['input']);
+  $bags = array_diff($all_files, array('.', '..'));
+  $bag_paths = array();
+  foreach ($bags as $bag_file) {
+    $path = $cmd['input'] . DIRECTORY_SEPARATOR . $bag_file;
+    $bag_paths[] = $path;
+  }
+}
+else {
+  $bag_paths = array();
+  $bag_paths[] = $cmd['input'];
 }
 
 $climate = new League\CLImate\CLImate;
