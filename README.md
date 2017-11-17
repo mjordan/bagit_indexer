@@ -28,12 +28,12 @@ Features that may be desirable in a tool based on this proof of concept include:
 
 - [x] On adding new Bags to the input directory, index them automatically.
 - [ ] On moving Bags to a different storage location, or renamig them, update their "bag_location" values in the Elasticsearch index
-- [ ] On replacing (updating) Bags, update their records in the Elasticsearch index
+- [ ] On replacing (updating) Bags, replace their records in the Elasticsearch index
 - [ ] On deleting Bags, replace their records in the Elasticsearch index with a tombstone
-- [ ] Add the ability to index specific data files within the Bags, to assist in discovery and management
 - [x] On indexing, validate the Bags index any validation errors in Elasticsearch
 - [x] On indexing, generate a SHA-1 or other checksum of the serialized Bag itself and add it to the Elasticsearch index, to assist in bit-level integrity checking of the Bag itself
 - [ ] Log indexing errors
+- [ ] Add the ability to index specific data files within the Bags, to assist in discovery and management
 - [ ] Develop a desktop or web-based app that performs functions similar to this command-line tool
 
 ## System requirements and installation
@@ -266,7 +266,7 @@ The Python script `bagit_watcher.py` will monitor a directory for new Bags and i
 
 `python bagit_watcher.py /path/to/input/dir`
 
-where `/path/to/input/dir` is corresponds to the `-i`/`--input` value passed to `bagit_indexer.php`. Currently the watcher only reacts to new files, but it would be possible to make it react to updated, renamed, moved, or deleted Bag files as well.
+where `/path/to/input/dir` is the directory you want to watch. This should correspond to the directory specified in the`-i`/`--input` option used with `bagit_indexer.php`. Currently the watcher only reacts to new files, but it would be possible to make it react to updated, renamed, moved, or deleted Bag files as well (provided those features were added to `bagit_indexer.php`).
 
 ## License
 
