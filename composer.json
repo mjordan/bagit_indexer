@@ -9,6 +9,6 @@
         "nategood/commando": "*",
         "league/climate":"~3.1",
         "guzzlehttp/guzzle": "~6.0",
-        "elasticsearch/elasticsearch": "~2.0",
+        "elasticsearch/elasticsearch": "~2.0"
     }
 }
