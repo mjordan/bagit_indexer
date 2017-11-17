@@ -3,7 +3,7 @@
 This set of Vagrant scripts will build a virutal machine running:
 
 * Ubuntu trusty64
-* Elasticsearch 5.4.1
+* Elasticsearch 6.0.0
 
 ## System requirements and installation
 
@@ -25,15 +25,17 @@ If you see a response similar to the following, your Elasticsearch instance is o
 
 ```json
 {
-  "name" : "jjpGgS3",
+  "name" : "iogFL4d",
   "cluster_name" : "elasticsearch",
-  "cluster_uuid" : "ro5cIb3dTCOOvyrXcIO2TQ",
+  "cluster_uuid" : "A2nFjdVVQmmcfXUJnLat6A",
   "version" : {
-    "number" : "5.4.1",
-    "build_hash" : "2cfe0df",
-    "build_date" : "2017-05-29T16:05:51.443Z",
+    "number" : "6.0.0",
+    "build_hash" : "8f0685b",
+    "build_date" : "2017-11-10T18:41:22.859Z",
     "build_snapshot" : false,
-    "lucene_version" : "6.5.1"
+    "lucene_version" : "7.0.1",
+    "minimum_wire_compatibility_version" : "5.6.0",
+    "minimum_index_compatibility_version" : "5.0.0"
   },
   "tagline" : "You Know, for Search"
 }

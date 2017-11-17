@@ -13,7 +13,8 @@ from subprocess import call
 from watchdog.observers import Observer  
 from watchdog.events import PatternMatchingEventHandler 
 
-bagit_indexer_path = "/foo/bagit_indexer.php"
+# You will need to change this.
+bagit_indexer_path = "/home/vagrant/bagit_indexer/bagit_indexer.php"
 
 class WatchHandler(PatternMatchingEventHandler):
     patterns = ["*.zip", "*.tgz", "*.tar.gz", "*.7z"]
