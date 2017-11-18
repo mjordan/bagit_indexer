@@ -9,13 +9,17 @@ apt-get -y install openssh-server git vim wget curl
 sudo apt-get install pip
 pip install watchdog
 
-# PHP stuff
+# PHP
 apt-get -y install php5-dev php5-xsl php5-curl php5-cli php-pear
 pear install Archive_Tar
 
+cd /home/vagrant
+
 # Install composer
-curl -Ss https://getcomposer.org/installer | php
-mv composer.phar /usr/bin/composer
+cd /tmp
+curl -sS https://getcomposer.org/installer | php
+php composer.phar install --no-progress
+mv composer.phar /usr/local/bin/composer
 
 # Clone this repo... woah, meta.
-git clone https://github.com/mjordan/bagit_indexer.git /home/vagrant
+git clone https://github.com/mjordan/bagit_indexer.git
