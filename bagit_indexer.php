@@ -94,11 +94,9 @@ foreach ($bag_paths as $bag_path) {
 
     $client = new Client([
       'base_uri' => $cmd['elasticsearch_url'],
-      ['headers' => ['Content-type' => 'application/json']],
       ]);
     try {
-      $request = new Request('POST', $cmd['elasticsearch_index'] . '/bag/' . pathinfo($bag_path, PATHINFO_FILENAME));
-      $response = $client->send($request, ['body' => json_encode($index)]);
+      $response = $client->post($cmd['elasticsearch_index'] . '/bag/' . pathinfo($bag_path, PATHINFO_FILENAME), ['json' => $index]);
     }
     catch (ClientException $e) {
       print Psr7\str($e->getRequest());
