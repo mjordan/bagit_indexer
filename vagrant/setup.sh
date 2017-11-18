@@ -6,7 +6,7 @@ apt-get -y upgrade
 apt-get -y install openssh-server git vim wget curl
 
 # So we can use the bagit_watcher.py script on the VM.
-sudo apt-get install pip
+sudo apt-get -y install python-pip
 pip install watchdog
 
 # PHP
@@ -22,3 +22,5 @@ mv composer.phar /usr/local/bin/composer
 # Clone this repo... woah, meta.
 cd /home/vagrant
 git clone https://github.com/mjordan/bagit_indexer.git
+cd bagit_indexer
+composer install
