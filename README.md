@@ -6,7 +6,8 @@ For example, questions you can ask of the sample data in this Git repository inc
 
 * which Bags were created on a specific date
 * which Bags contain a specific file in their `data` directory
-* which Bags have specific keywords in their description
+* which Bags have specific keywords in their bag_info.txt description
+* which Bags have specific keywords in text or XML files in their data directory
 * which Bags were created by a specific organization
 
 With a little more developement beyond this proof of concept, you could ask questions like:
@@ -33,7 +34,7 @@ Features that may be desirable in a tool based on this proof of concept include:
 - [x] On indexing, validate the Bags index any validation errors in Elasticsearch
 - [x] On indexing, generate a SHA-1 or other checksum of the serialized Bag itself and add it to the Elasticsearch index, to assist in bit-level integrity checking of the Bag itself
 - [ ] Log indexing errors
-- [ ] Add the ability to index specific data files within the Bags, to assist in discovery and management
+- [x] Add the ability to index specific content files within the Bags, to assist in discovery and management
 - [ ] Develop a desktop or web-based app that performs functions similar to this command-line tool
 
 ## System requirements and installation
@@ -65,6 +66,10 @@ Run `php bagit_indexer.php --help` to get help info:
 -i/--input <argument>
      Required. Absolute or relative path to either a directory containing Bags (trailing slash is optional), or a Bag filename.
 
+-c/--content_files <argument>
+     Comma-separated list of plain text or XML file paths relative to the Bag data directory that are to be indexed into the "content"
+     field, e.g., "--content MODS.xml,notes.txt".
+
 -e/--elasticsearch_url <argument>
      URL (including port number) of your Elasticsearch endpoint. Default is "http://localhost:9200".
 
@@ -88,65 +93,66 @@ This indexing results in an Elasticsarch document for each Bag like this:
 
 ```json
 {
-   "_index":"bags",
-   "_type":"bag",
-   "_id":"bag_02",
-   "_score":1.0,
-   "_source":{
-      "bag_location":"/home/mark/Documents/hacking/bagit/bagit_indexer/sample_bags",
-      "bag_validated" : {
-        "timestamp" : "2017-06-27T14:55:44Z",
-        "result" : "valid"
-      },
-      "bag_hash" : {
-        "type" : "sha1",
-        "value" : "ebd53651c768da1dbca352988e8a93d3f5f9c2d7"
-      },
-      "bagit_version":{
-         "major":0,
-         "minor":96
-      },
-      "fetch":{
-         "fileName":"fetch.txt",
-         "data":[
-
-         ],
-         "fileEncoding":"UTF-8"
-      },
-      "bag-info":{
-         "External-Description":"Contains some stuff we want to put into cold storage, and that is very important.",
-         "Bagging-Date":"2017-06-18",
-         "Internal-Sender-Identifier":"Bag_02",
-         "Source-Organization":"Bags R Us",
-         "Contact-Email":"contact@bagrus.com"
-      },
-      "data_files":[
-         "data/anothertextfile.txt",
-         "data/atextfile-2.txt",
-         "data/data_2.dat",
-         "data/subdir/data_3.dat"
-      ],
-      "manifest":{
-         "fileName":"manifest-sha1.txt",
-         "hashEncoding":"sha1",
-         "fileEncoding":"UTF-8",
-         "data":{
-            "data/anothertextfile.txt":"eb2614a66a1d34a6d007139864a1a9679c9b96aa",
-            "data/atextfile-2.txt":"eb2614a66a1d34a6d007139864a1a9679c9b96aa",
-            "data/data_2.dat":"3f8aef7161402b58c261c4a9778c27203e276593",
-            "data/subdir/data_3.dat":"3f8aef7161402b58c261c4a9778c27203e276593"
-         }
-      }
-   }
+	"_index": "bags",
+	"_type": "bag",
+	"_id": "bag_03",
+	"_version": 74,
+	"found": true,
+	"_source": {
+		"bag_location": "\/home\/mark\/Documents\/hacking\/bagit\/bagit_indexer\/sample_bags",
+		"bag_validated": {
+			"timestamp": "2017-11-19T18:27:29Z",
+			"result": "valid"
+		},
+		"bag_hash": {
+			"type": "sha1",
+			"value": "ebd53651c768da1dbca352988e8a93d3f5f9c2d7"
+		},
+		"bagit_version": {
+			"major": 0,
+			"minor": 96
+		},
+		"fetch": {
+			"fileName": "fetch.txt",
+			"data": [],
+			"fileEncoding": "UTF-8"
+		},
+		"content": "Hi! A sample text file.",
+		"bag-info": {
+			"External-Description": "A simple bag.",
+			"Bagging-Date": "2016-02-28",
+			"Internal-Sender-Identifier": "bag_03",
+			"Source-Organization": "Acme Bags",
+			"Contact-Email": "info@acmebags.com"
+		},
+		"data_files": ["data\/atextfile.txt", "data\/master.tif", "data\/metadata.xml"],
+		"manifest": {
+			"fileName": "manifest-sha1.txt",
+			"hashEncoding": "sha1",
+			"fileEncoding": "UTF-8",
+			"data": {
+				"data\/atextfile.txt": "eb2614a66a1d34a6d007139864a1a9679c9b96aa",
+				"data\/master.tif": "44b16ef126bd6e0ac642460ddb1d8b1551064b03",
+				"data\/metadata.xml": "78f4cb10e0ad1302e8f97f199620d8333efaddfb"
+			}
+		}
+	}
 }
 ```
 
-This is the data that you will be querying in the next section.
+This is the data that you will be querying in the "Finding Bags" section.
+
+## Indexing "Content" files
+
+Including the `--content_files` option will index the content of the specified files and store it in the Elasticsearch 'content' field. You should only include paths to plain text or XML files, not paths to image, word processing, or other binary files. If you list multiple files, the content from all files is combined into one 'content' field.
+
+A possible enhancement to this feature would be to use Apache Tika to extract the text content from a [wide variety of file formats](https://tika.apache.org/1.16/formats.html).
 
 ## Finding Bags
 
 The `bagit_searcher.php` script allows you to perform simple queries against the indexed data. The following types of queries are possible:
 
+* 'content', which queries the 'content' field, which contains the contents of plain text or XML files in the Bag's 'data' directory
 * 'description', which queries the contents of the `bag-info.txt` 'External-Description' tag
 * 'date', which queries the contents of the `bag-info.txt` 'Bagging-Date' tag
 * 'org', which queries the contents of the `bag-info.txt` 'Source-Organization' tag

@@ -30,9 +30,9 @@ $cmd->option('e')
   ->aka('elasticsearch_url')
   ->describedAs('URL (including port number) of your Elasticsearch endpoint. Default is "http://localhost:9200".')
   ->default('http://localhost:9200');
-$cmd->option('d')
-  ->aka('descriptive_files')
-  ->describedAs('Comma-separated list of file paths relative to the Bag data directory that are to be indexed into the "descriptive" field.')
+$cmd->option('c')
+  ->aka('content_files')
+  ->describedAs('Comma-separated list of plain text or XML file paths relative to the Bag data directory that are to be indexed into the "content" field, e.g., "--content MODS.xml,notes.txt".')
   ->default('');
 $cmd->option('x')
   ->aka('elasticsearch_index')
@@ -76,17 +76,12 @@ foreach ($bag_paths as $bag_path) {
     $bag_sha1 = sha1_file($bag_path);
     $index['bag_hash']['type'] = 'sha1';
     $index['bag_hash']['value'] = $bag_sha1;
-    // print "Value of hash in main loop for $bag_path: ";
-    // var_dump($index['bag_hash']['value']);
 
     $index['bagit_version'] = $bag->bagVersion;
     $bag->fetch->fileName = basename($bag->fetch->fileName);
     $index['fetch'] = $bag->fetch;
 
-    // $index['descriptive'] = sha1_file($bag_path);
-    $index['descriptive'] = get_descriptive_data(realpath($bag_path), $cmd['descriptive_files']);
-    print "Value of descriptive in main loop for $bag_path: ";
-    var_dump($index['descriptive']);
+    $index['content'] = get_content_data(realpath($bag_path), $cmd['content_files']);
 
     $bag_info = array();
     foreach ($bag->bagInfoData as $tag => &$value) {
@@ -124,7 +119,7 @@ foreach ($bag_paths as $bag_path) {
 print "Done. " . $bag_num . " Bags added to " . $cmd['elasticsearch_url'] . '/' . $cmd['elasticsearch_index'] . PHP_EOL;
 
 /**
- * Gets content of files to populate the 'descriptive' field.
+ * Gets content of files to populate the 'content' field.
  *
  * @param string $paths
  *   A string containing a comma-separate list of file paths relative to the
@@ -134,7 +129,7 @@ print "Done. " . $bag_num . " Bags added to " . $cmd['elasticsearch_url'] . '/' 
  *   The concatentated values of the text from each of the files
  *   in $paths.
  */
-function get_descriptive_data($bag_path, $paths) {
+function get_content_data($bag_path, $paths) {
   if (!strlen($paths)) {
     return '';
   }
@@ -143,7 +138,7 @@ function get_descriptive_data($bag_path, $paths) {
     return '';
   }
   $file_paths = explode(',', $paths);
-  $descriptive_text = '';
+  $content_text = '';
   foreach ($file_paths as $path) {
     $text = '';
     $ext = pathinfo($path, PATHINFO_EXTENSION);
@@ -163,9 +158,7 @@ function get_descriptive_data($bag_path, $paths) {
         $text = trim($text) . ' ';
       }
     }
-    $descriptive_text .= $text;
+    $content_text .= $text;
   }
-  print "descriptive from just before returning from get_descriptive_data() for $bag_name ";
-  var_dump($descriptive_text);
-  return trim($descriptive_text);
+  return trim($content_text);
 }

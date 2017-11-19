@@ -34,6 +34,9 @@ $client = $clientBuilder->build();
 // Build the query.
 list($field, $query) = explode(':', $cmd['q']);
 switch ($field) {
+  case 'content':
+    $query_field = 'content';
+    break;
   case 'description':
     $query_field = 'bag-info.External-Description';
     break;
@@ -50,7 +53,7 @@ switch ($field) {
     $query_field = 'bag_location';
     break;
   default:
-    print "Sorry, I don't recognize that field; you can use 'description', 'date', 'org', 'file', or 'bag_location'." . PHP_EOL;
+    print "Sorry, I don't recognize that field; you can use 'content', 'description', 'date', 'org', 'file', or 'bag_location'." . PHP_EOL;
     exit;
 }
 
@@ -71,6 +74,9 @@ if ($results['hits']['total'] > 0) {
   $table_data = array();
   foreach ($results['hits']['hits'] as $hit) {
     switch ($field) {
+      case 'content':
+      $table_data[] = array('Bag ID' => $hit['_id'], 'Text content' => $hit['_source']['content']);
+      break;
       case 'description':
       $table_data[] = array('Bag ID' => $hit['_id'], 'External-Description' => $hit['_source']['bag-info']['External-Description']);
       break;
