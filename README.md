@@ -91,80 +91,54 @@ Done. 5 Bags added to http://localhost:9200/bags
 ```
 This indexing results in an Elasticsarch document for each Bag like this:
 
-```php
-Array
-(
-    [_index] => bags
-    [_type] => bag
-    [_id] => bag_03
-    [_version] => 75
-    [found] => 1
-    [_source] => Array
-        (
-            [bag_location] => /home/mark/Documents/hacking/bagit/bagit_indexer/sample_bags/bag_03.tgz
-            [bag_validated] => Array
-                (
-                    [timestamp] => 2017-11-19T22:36:52Z
-                    [result] => valid
-                )
-
-            [bag_hash] => Array
-                (
-                    [type] => sha1
-                    [value] => ebd53651c768da1dbca352988e8a93d3f5f9c2d7
-                )
-
-            [bagit_version] => Array
-                (
-                    [major] => 0
-                    [minor] => 96
-                )
-
-            [fetch] => Array
-                (
-                    [fileName] => fetch.txt
-                    [data] => Array
-                        (
-                        )
-
-                    [fileEncoding] => UTF-8
-                )
-
-            [serialization] => tgz
-            [content] => 
-            [bag-info] => Array
-                (
-                    [External-Description] => A simple bag.
-                    [Bagging-Date] => 2016-02-28
-                    [Internal-Sender-Identifier] => bag_03
-                    [Source-Organization] => Acme Bags
-                    [Contact-Email] => info@acmebags.com
-                )
-
-            [data_files] => Array
-                (
-                    [0] => data/atextfile.txt
-                    [1] => data/master.tif
-                    [2] => data/metadata.xml
-                )
-
-            [manifest] => Array
-                (
-                    [fileName] => manifest-sha1.txt
-                    [hashEncoding] => sha1
-                    [fileEncoding] => UTF-8
-                    [data] => Array
-                        (
-                            [data/atextfile.txt] => eb2614a66a1d34a6d007139864a1a9679c9b96aa
-                            [data/master.tif] => 44b16ef126bd6e0ac642460ddb1d8b1551064b03
-                            [data/metadata.xml] => 78f4cb10e0ad1302e8f97f199620d8333efaddfb
-                        )
-
-                )
-
-        )
-
-)
+```json
+{
+	"_index": "bags",
+	"_type": "bag",
+	"_id": "bag_03",
+	"_version": 75,
+	"found": true,
+	"_source": {
+		"bag_location": "\/home\/mark\/Documents\/hacking\/bagit\/bagit_indexer\/sample_bags\/bag_03.tgz",
+		"bag_validated": {
+			"timestamp": "2017-11-19T22:36:52Z",
+			"result": "valid"
+		},
+		"bag_hash": {
+			"type": "sha1",
+			"value": "ebd53651c768da1dbca352988e8a93d3f5f9c2d7"
+		},
+		"bagit_version": {
+			"major": 0,
+			"minor": 96
+		},
+		"fetch": {
+			"fileName": "fetch.txt",
+			"data": [],
+			"fileEncoding": "UTF-8"
+		},
+		"serialization": "tgz",
+		"content": "",
+		"bag-info": {
+			"External-Description": "A simple bag.",
+			"Bagging-Date": "2016-02-28",
+			"Internal-Sender-Identifier": "bag_03",
+			"Source-Organization": "Acme Bags",
+			"Contact-Email": "info@acmebags.com"
+		},
+		"data_files": ["data\/atextfile.txt", "data\/master.tif", "data\/metadata.xml"],
+		"manifest": {
+			"fileName": "manifest-sha1.txt",
+			"hashEncoding": "sha1",
+			"fileEncoding": "UTF-8",
+			"data": {
+				"data\/atextfile.txt": "eb2614a66a1d34a6d007139864a1a9679c9b96aa",
+				"data\/master.tif": "44b16ef126bd6e0ac642460ddb1d8b1551064b03",
+				"data\/metadata.xml": "78f4cb10e0ad1302e8f97f199620d8333efaddfb"
+			}
+		}
+	}
+}
 ```
 
 This is the data that you will be querying in the "Finding Bags" section.
