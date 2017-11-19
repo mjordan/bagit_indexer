@@ -3,7 +3,7 @@
 This set of Vagrant scripts will build a virutal machine running:
 
 * Ubuntu trusty64
-* Elasticsearch 6.0.0
+* Elasticsearch 5.6.4
 
 ## System requirements and installation
 
