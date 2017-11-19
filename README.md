@@ -152,7 +152,7 @@ A possible enhancement to this feature would be to use Apache Tika to extract th
 
 The `bagit_searcher.php` script allows you to perform simple queries against the indexed data. The following types of queries are possible:
 
-* 'content', which queries the 'content' field, which contains the contents of plain text or XML files in the Bag's 'data' directory
+* 'content', which queries the contents of plain text or XML files in the Bag's 'data' directory
 * 'description', which queries the contents of the `bag-info.txt` 'External-Description' tag
 * 'date', which queries the contents of the `bag-info.txt` 'Bagging-Date' tag
 * 'org', which queries the contents of the `bag-info.txt` 'Source-Organization' tag
