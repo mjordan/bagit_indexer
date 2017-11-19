@@ -7,7 +7,7 @@ For example, questions you can ask of the sample data in this Git repository inc
 * which Bags were created on a specific date
 * which Bags contain a specific file in their `data` directory
 * which Bags have specific keywords in their bag_info.txt description
-* which Bags have specific keywords in text or XML files in their data directory
+* which Bags have specific keywords in text or XML files in their `data` directory
 * which Bags were created by a specific organization
 
 With a little more developement beyond this proof of concept, you could ask questions like:
@@ -211,6 +211,14 @@ Your query found 1 hit(s):
 | bag_03 | data/atextfile.txt, data/master.tif, data/metadata.xml |
 -------------------------------------------------------------------
 ```
+
+## Retrieving the Elasticsearch document for a specific Bag
+
+If you want to retrieve the raw Elasticsearch document for a specific Bag, use the `--id` option instead of the `-q` option, and provide the Bag's ID:
+
+```php bagit_searcher.php --id bag_03```
+
+## Sample Bags
 
 Here are the values from `bag-info.txt` tags and the list of files in the `data` directories for the sample Bags, in case you want to try some searches of your own:
 

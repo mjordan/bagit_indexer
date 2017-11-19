@@ -12,8 +12,11 @@ use Elasticsearch\ClientBuilder;
 $cmd = new Commando\Command();
 $cmd->option('q')
   ->aka('query')
-  ->require(true)
-  ->describedAs('Query to perform.');
+  ->describedAs('Query to perform. Do not mix with --id.');
+$cmd->option('i')
+  ->aka('id')
+  ->describedAs('The ID of a Bag. The Elasticsearch document for the Bag will be retrieved and displayed. Do not mix with --query.')
+  ->default('');
 $cmd->option('e')
   ->aka('elasticsearch_url')
   ->describedAs('URL (including port number) of your Elasticsearch endpoint. Default is "http://localhost:9200".')
@@ -30,6 +33,30 @@ $hosts = array($cmd['e']);
 $clientBuilder = ClientBuilder::create();
 $clientBuilder->setHosts($hosts);
 $client = $clientBuilder->build();
+
+// If the request is for a specific Bag's document, retrieve it here and go no further.
+if (strlen($cmd['id'])) {
+  $params = [
+    'index' => 'bags',
+    'type' => 'bag',
+    'id' => $cmd['id'],
+  ];
+
+  try {
+    $response = $client->get($params);
+    print_r($response);
+    }
+  catch (Exception $e) {
+    $message = json_decode($e->getMessage());
+    if (!$message->found) {
+      print "Bag with ID " . $cmd['i'] . " not found.\n";
+    }
+    else {
+      print "Oops -unanticipated error: " . $e->getMessage() . "\n";
+    }
+  }
+  exit;
+}
 
 // Build the query.
 list($field, $query) = explode(':', $cmd['q']);
