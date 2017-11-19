@@ -13,7 +13,8 @@ from subprocess import call
 from watchdog.observers import Observer  
 from watchdog.events import PatternMatchingEventHandler 
 
-# You will need to change this.
+# You will need to change this to the full path to the indexer
+# script, unless you are runing it in the Vagrant VM.
 bagit_indexer_path = "/home/vagrant/bagit_indexer/bagit_indexer.php"
 
 class WatchHandler(PatternMatchingEventHandler):

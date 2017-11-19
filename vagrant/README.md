@@ -25,18 +25,30 @@ If you see a response similar to the following, your Elasticsearch instance is o
 
 ```json
 {
-  "name" : "iogFL4d",
+  "name" : "VAQGJIQ",
   "cluster_name" : "elasticsearch",
-  "cluster_uuid" : "A2nFjdVVQmmcfXUJnLat6A",
+  "cluster_uuid" : "ecverQDfRp2lPn2wvTAe-Q",
   "version" : {
-    "number" : "6.0.0",
-    "build_hash" : "8f0685b",
-    "build_date" : "2017-11-10T18:41:22.859Z",
+    "number" : "5.6.4",
+    "build_hash" : "8bbedf5",
+    "build_date" : "2017-10-31T18:55:38.105Z",
     "build_snapshot" : false,
-    "lucene_version" : "7.0.1",
-    "minimum_wire_compatibility_version" : "5.6.0",
-    "minimum_index_compatibility_version" : "5.0.0"
+    "lucene_version" : "6.6.1"
   },
   "tagline" : "You Know, for Search"
 }
 ```
+
+## BagIt Indexer is installed automatically
+
+The setup scripts clone this Git repo and run composer to install the BagIt Indexer. This is just a convenience; if you prefer to run the indexer and search scripts from your host, follow the instructions in the main README.md file.
+
+But, if you want to log into the virtual machine to index and search Bags, from within the vagrant directory, enter the following command:
+
+```vagrant ssh```
+
+After you enter the VM's shell, run 
+
+```cd bagit_indexer```
+
+and you're ready to start indexing. 
