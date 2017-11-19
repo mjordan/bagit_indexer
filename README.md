@@ -55,9 +55,9 @@ To install the Bagit Indexer:
 
 ## Indexing Bags
 
-`bagit_indexer.php` extracts data from Bags and pushes it into Elasticsearch.
+`./index` extracts data from Bags and pushes it into Elasticsearch.
 
-Run `php bagit_indexer.php --help` to get help info:
+Run `./index --help` to get help info:
 
 ```
 --help
@@ -77,10 +77,10 @@ Run `php bagit_indexer.php --help` to get help info:
      Elasticsearch index. Default is "bags".
 ```
 
-To index Bags (serialized or loose) in your input directory, run the `bagit_indexer` script like this:
+To index Bags (serialized or loose) in your input directory, run the `index` script like this:
 
 ```
-php bagit_indexer.php -i sample_bags
+./index -i sample_bags
 ```
 
 You will see the following:
@@ -150,18 +150,18 @@ A possible enhancement to this feature would be to use Apache Tika to extract th
 
 ## Finding Bags
 
-The `bagit_searcher.php` script allows you to perform simple queries against the indexed data. The following types of queries are possible:
+The `find` script allows you to perform simple queries against the indexed data. The following types of queries are possible:
 
 * 'content', which queries the contents of plain text or XML files in the Bag's 'data' directory
 * 'description', which queries the contents of the `bag-info.txt` 'External-Description' tag
 * 'date', which queries the contents of the `bag-info.txt` 'Bagging-Date' tag
 * 'org', which queries the contents of the `bag-info.txt` 'Source-Organization' tag
 * 'file', which queries filepaths of files in the Bag's `data` directory
-* 'bag_location', which queries filepaths of the Bag's storage location, which is the value provided to `bagit_indexer.php`'s `-input` option when the index was populated
+* 'bag_location', which queries filepaths of the Bag's storage location, which is the value provided to `index`'s `-input` option when the index was populated
 
 Queries take the form `-q field:query`. For example, to search for the phrase "cold storage" in the description, run the command (note that quotes are required because of the space in the query):
 
-```php bagit_searcher.php -q "description:cold storage"```
+```./find -q "description:cold storage"```
 
 which will return the following results:
 
@@ -178,7 +178,7 @@ Your query found 2 hit(s):
 
 To search for Bags that have a Bagging-Date of "2017-06-18", run this command:
 
-```php bagit_searcher.php -q date:2017-06-18```
+```./find -q date:2017-06-18```
 
 which will return the following result:
 
@@ -199,7 +199,7 @@ Your query found 4 hit(s):
 
 To search for Bags that contain a file under `data` named 'master.tif', run this command:
 
-```php bagit_searcher.php -q file:master.tif```
+```./find -q file:master.tif```
 
 which will return the following result:
 
@@ -216,7 +216,7 @@ Your query found 1 hit(s):
 
 If you want to retrieve the raw Elasticsearch document for a specific Bag, use the `--id` option instead of the `-q` option, and provide the Bag's ID:
 
-```php bagit_searcher.php --id bag_03```
+```./find --id bag_03```
 
 ## Sample Bags
 
@@ -280,7 +280,7 @@ The Python script `bagit_watcher.py` will monitor a directory for new Bags and i
 
 `python bagit_watcher.py /path/to/input/dir`
 
-where `/path/to/input/dir` is the directory you want to watch. This should correspond to the directory specified in the`-i`/`--input` option used with `bagit_indexer.php`. Currently the watcher only reacts to new files, but it would be possible to make it react to updated, renamed, moved, or deleted Bag files as well (provided those features were added to `bagit_indexer.php`).
+where `/path/to/input/dir` is the directory you want to watch. This should correspond to the directory specified in the`-i`/`--input` option used with `index`. Currently the watcher only reacts to new files, but it would be possible to make it react to updated, renamed, moved, or deleted Bag files as well (provided those features were added to the `index` script).
 
 ## License
 

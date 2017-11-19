@@ -1,3 +1,4 @@
+#!/usr/bin/env php
 <?php
 
 /**
@@ -40,8 +41,7 @@ $cmd->option('x')
   ->default('bags');
 
 if (is_dir($cmd['input'])) {
-  $all_files = scandir($cmd['input']);
-  $bags = array_diff($all_files, array('.', '..'));
+  $bags = get_bags($cmd['i']);
   $bag_paths = array();
   foreach ($bags as $bag_file) {
     $path = rtrim($cmd['input'], DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $bag_file;
@@ -119,6 +119,22 @@ foreach ($bag_paths as $bag_path) {
 }
 
 print "Done. " . $bag_num . " Bags added to " . $cmd['elasticsearch_url'] . '/' . $cmd['elasticsearch_index'] . PHP_EOL;
+
+/**
+ * Finds Bags to index.
+ *
+ * @param string $path
+ *   A string containing the path to the input directory to scan.
+ *
+ * @return array
+ *   An arrary of all the files in the input directory.
+ *   in $paths.
+ */
+function get_bags($path) {
+  $all_files = scandir($path);
+  $bags = array_diff($all_files, array('.', '..'));
+  return $bags;
+}
 
 /**
  * Gets content of files to populate the 'content' field.
