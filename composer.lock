@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "527e134fa47e77c086bad6aba5463145",
+    "content-hash": "442d731de9b551d28004cb6555c48149",
     "packages": [
         {
             "name": "elasticsearch/elasticsearch",
@@ -922,6 +922,83 @@
                 "prompt"
             ],
             "time": "2017-03-18T11:32:45+00:00"
+        },
+        {
+            "name": "wapmorgan/unified-archive",
+            "version": "0.0.10",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/wapmorgan/UnifiedArchive.git",
+                "reference": "e41a8b3e2974002ddbaac7aa807d5463a82d5963"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/wapmorgan/UnifiedArchive/zipball/e41a8b3e2974002ddbaac7aa807d5463a82d5963",
+                "reference": "e41a8b3e2974002ddbaac7aa807d5463a82d5963",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "replace": {
+                "wapmorgan/cam": "1.0.2"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.8"
+            },
+            "suggest": {
+                "bin-ncompress": "TAR.Z support",
+                "docopt/docopt": "Requirement for cam (Console Archive Manager)",
+                "ext-bz2": "BZ2 and TAR.BZ2 support",
+                "ext-rar": "RAR support",
+                "ext-xz": "XZ and TAR.XZ support",
+                "ext-zip": "ZIP support",
+                "ext-zlib": "GZ and TAR.GZ support",
+                "gemorroj/archive7z": "7ZIP support",
+                "pear/archive_tar": "TAR support (strongly recommended)",
+                "phpclasses/php-iso-file": "ISO support",
+                "wapmorgan/cab-archive": "CAB support"
+            },
+            "bin": [
+                "bin/cam"
+            ],
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "wapmorgan\\UnifiedArchive\\": "src/"
+                },
+                "files": [
+                    "src/function.gzip_stat.php",
+                    "src/REGISTER_LZW_STREAM_WRAPPER.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "wapmorgan",
+                    "email": "wapmorgan@gmail.com",
+                    "role": "developer"
+                }
+            ],
+            "description": "UnifiedArchive - unified interface to archive (zip, 7z, rar, gz, bz2, xz, cab, tar, tar.gz, tar.bz2, tar.x, tar.Z, iso) for listing, reading, extracting and creation + built-in console archive manager + fully implemented PclZip-like interface (create, listContent, extract, properties, add, delete, merge, duplicate).",
+            "keywords": [
+                "7z",
+                "archive",
+                "bzip2",
+                "cab",
+                "compression",
+                "gzip",
+                "iso",
+                "lzma2",
+                "ncompress",
+                "rar",
+                "tar",
+                "zip"
+            ],
+            "time": "2017-08-07T18:05:11+00:00"
         }
     ],
     "packages-dev": [],

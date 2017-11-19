@@ -9,6 +9,7 @@
         "nategood/commando": "*",
         "league/climate":"~3.1",
         "guzzlehttp/guzzle": "~6.0",
+        "wapmorgan/unified-archive": "~0.0.10",
         "elasticsearch/elasticsearch": "2.0"
     }
 }
