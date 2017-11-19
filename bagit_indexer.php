@@ -57,11 +57,11 @@ $climate = new League\CLImate\CLImate;
 $bag_num = 0;
 $progress = $climate->progress()->total(count($bag_paths));
 
-$index['bag_location'] = realpath($cmd['input']);
-
 foreach ($bag_paths as $bag_path) {
   if (is_file($bag_path)) {
     $bag = new BagIt($bag_path);
+
+    $index['bag_location'] = realpath($bag_path);
 
     $errors = $bag->validate();
     if (count($errors) === 0) {
@@ -80,6 +80,8 @@ foreach ($bag_paths as $bag_path) {
     $index['bagit_version'] = $bag->bagVersion;
     $bag->fetch->fileName = basename($bag->fetch->fileName);
     $index['fetch'] = $bag->fetch;
+
+    $index['serialization'] = pathinfo($bag_path, PATHINFO_EXTENSION);
 
     $index['content'] = get_content_data(realpath($bag_path), $cmd['content_files']);
 
