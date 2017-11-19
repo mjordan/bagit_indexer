@@ -14,8 +14,6 @@ use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Psr7;
 use \wapmorgan\UnifiedArchive\UnifiedArchive;
 
-$descriptive_extensions = array('txt', 'md', 'xml');
-
 $cmd = new Commando\Command();
 $cmd->option('i')
   ->aka('input')
@@ -46,7 +44,7 @@ if (is_dir($cmd['input'])) {
   $bags = array_diff($all_files, array('.', '..'));
   $bag_paths = array();
   foreach ($bags as $bag_file) {
-    $path = $cmd['input'] . DIRECTORY_SEPARATOR . $bag_file;
+    $path = rtrim($cmd['input'], DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $bag_file;
     $bag_paths[] = $path;
   }
 }
@@ -75,17 +73,19 @@ foreach ($bag_paths as $bag_path) {
       $index['bag_validated']['errors'][] = $errors;
     }
 
-    $bag_id = pathinfo($bag_path, PATHINFO_FILENAME);
-
     $bag_sha1 = sha1_file($bag_path);
     $index['bag_hash']['type'] = 'sha1';
     $index['bag_hash']['value'] = $bag_sha1;
+    // print "Value of hash in main loop for $bag_path: ";
+    // var_dump($index['bag_hash']['value']);
 
     $index['bagit_version'] = $bag->bagVersion;
     $bag->fetch->fileName = basename($bag->fetch->fileName);
     $index['fetch'] = $bag->fetch;
 
-    $index['descriptive'] = get_descriptive_data($bag_id, realpath($bag_path), $cmd['descriptive_files']);
+    // $index['descriptive'] = sha1_file($bag_path);
+    $index['descriptive'] = get_descriptive_data(realpath($bag_path), $cmd['descriptive_files']);
+    print "Value of descriptive in main loop for $bag_path: ";
     var_dump($index['descriptive']);
 
     $bag_info = array();
@@ -104,6 +104,7 @@ foreach ($bag_paths as $bag_path) {
 
     $index['manifest'] = $manifest;
 
+    $bag_id = pathinfo($bag_path, PATHINFO_FILENAME);
     $client = new Client([
       'base_uri' => $cmd['elasticsearch_url'],
       ]);
@@ -133,41 +134,38 @@ print "Done. " . $bag_num . " Bags added to " . $cmd['elasticsearch_url'] . '/' 
  *   The concatentated values of the text from each of the files
  *   in $paths.
  */
-function get_descriptive_data($bag_id, $bag_path, $paths) {
-  global $descriptive_extensions;
+function get_descriptive_data($bag_path, $paths) {
   if (!strlen($paths)) {
     return '';
   }
-  $descriptive_text = '';
-  $file_paths = explode(',', $paths);
+  $bag_name = pathinfo($bag_path, PATHINFO_FILENAME);
   if (!$archive = UnifiedArchive::open($bag_path)) {
     return '';
   }
-  // var_dump($archive->getFileNames());
+  $file_paths = explode(',', $paths);
+  $descriptive_text = '';
   foreach ($file_paths as $path) {
     $text = '';
-    $path_in_archive = $bag_id . '/data/' . $path;
-    $ext = pathinfo($path_in_archive, PATHINFO_EXTENSION);
-    $file_content = $archive->getFileContent($path_in_archive);
-    if (strlen($file_content)) {
-      $file_content = trim($file_content) . ' ';
-    }
-    var_dump($file_content);
+    $ext = pathinfo($path, PATHINFO_EXTENSION);
+    $path_in_archive = $bag_name . '/data/' . $path;
     if ($file_content = $archive->getFileContent($path_in_archive)) {
       // If extension is .xml, parse out the text content of all elements.
-      if (in_array($ext, $descriptive_extensions) && ($ext == 'xml')) {
+      if ($ext == 'xml') {
         $dom = new DOMDocument();
         $dom->loadXML($file_content);
         $text = $dom->documentElement->textContent;
-        $text = preg_replace('/\s+/', ' ', $descriptive_text);
-        var_dump($text);
+        $text = preg_replace('/\s+/', ' ', $text);
+        $text = trim($text) . ' ';
       }
       // If extension is not .xml, read in the file content as is.
-      if (in_array($ext, $descriptive_extensions) && ($ext != 'xml')) {
+      else {
         $text = preg_replace('/\s+/', ' ', $file_content);
+        $text = trim($text) . ' ';
       }
     }
     $descriptive_text .= $text;
   }
+  print "descriptive from just before returning from get_descriptive_data() for $bag_name ";
+  var_dump($descriptive_text);
   return trim($descriptive_text);
 }
