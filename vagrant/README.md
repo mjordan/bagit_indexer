@@ -1,8 +1,8 @@
-# Vagrant build scripts for Elasticsearch 5.4.1
+# Vagrant build scripts for Elasticsearch 5.6.4
 
 This set of Vagrant scripts will build a virutal machine running:
 
-* Ubuntu trusty64
+* Ubuntu 14.04/trusty64
 * Elasticsearch 5.6.4
 
 ## System requirements and installation
@@ -39,7 +39,7 @@ If you see a response similar to the following, your Elasticsearch instance is o
 }
 ```
 
-## BagIt Indexer is installed automatically
+## Using BagIt Indexer from within the virtual machine
 
 The setup scripts clone this Git repo and run composer to install the BagIt Indexer. This is just a convenience; if you prefer to run the indexer and search scripts from your host, follow the instructions in the main README.md file.
 
