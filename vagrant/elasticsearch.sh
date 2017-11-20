@@ -10,5 +10,10 @@ sudo dpkg -i elasticsearch-5.6.4.deb
 rm /home/vagrant/elasticsearch-5.6.4.deb
 sed -i 's/#network.host: 192.168.0.1/network.host: 0.0.0.0/' /etc/elasticsearch/elasticsearch.yml
 sudo update-rc.d elasticsearch defaults 95 10
-
 sudo /etc/init.d/elasticsearch start
+
+wget https://artifacts.elastic.co/downloads/kibana/kibana-5.6.4-amd64.deb
+sudo dpkg -i kibana-5.6.4-amd64.deb
+rm /home/vagrant/kibana-5.6.4-amd64.deb
+sudo sed -i 's/#server.host: "localhost"/server.host: "10.0.2.15"/' /etc/kibana/kibana.yml
+sudo service kibana start

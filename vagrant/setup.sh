@@ -24,3 +24,4 @@ cd /home/vagrant
 git clone https://github.com/mjordan/bagit_indexer.git
 cd bagit_indexer
 composer install
+chown -R vagrant:vagrant /home/vagrant/bagit_indexer
