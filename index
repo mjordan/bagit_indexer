@@ -53,6 +53,10 @@ else {
   $bag_paths[] = $cmd['input'];
 }
 
+if (!index_exists($cmd['elasticsearch_url'], $cmd['elasticsearch_index'])) {
+  create_index($cmd['elasticsearch_url'], $cmd['elasticsearch_index']);
+}
+
 $climate = new League\CLImate\CLImate;
 $bag_num = 0;
 $progress = $climate->progress()->total(count($bag_paths));
@@ -61,34 +65,36 @@ foreach ($bag_paths as $bag_path) {
   if (is_file($bag_path)) {
     $bag = new BagIt($bag_path);
 
-    $index['bag_location'] = realpath($bag_path);
+    $document['document_created'] = gmdate("Y-m-d\TH:i:s\Z");
+
+    $document['bag_location'] = realpath($bag_path);
 
     $errors = $bag->validate();
     if (count($errors) === 0) {
-      $index['bag_validated']['timestamp'] = gmdate("Y-m-d\TH:i:s\Z");
-      $index['bag_validated']['result'] = 'valid';
+      $document['bag_validated']['timestamp'] = gmdate("Y-m-d\TH:i:s\Z");
+      $document['bag_validated']['result'] = 'valid';
     } else {
-      $index['bag_validated']['timestamp'] = gmdate("Y-m-d\TH:i:s\Z");
-      $index['bag_validated']['result'] = 'invalid';
-      $index['bag_validated']['errors'][] = $errors;
+      $document['bag_validated']['timestamp'] = gmdate("Y-m-d\TH:i:s\Z");
+      $document['bag_validated']['result'] = 'invalid';
+      $document['bag_validated']['errors'][] = $errors;
     }
 
     $bag_sha1 = sha1_file($bag_path);
-    $index['bag_hash']['type'] = 'sha1';
-    $index['bag_hash']['value'] = $bag_sha1;
+    $document['bag_hash']['type'] = 'sha1';
+    $document['bag_hash']['value'] = $bag_sha1;
 
-    $index['bagit_version'] = $bag->bagVersion;
+    $document['bagit_version'] = $bag->bagVersion;
     $bag->fetch->fileName = basename($bag->fetch->fileName);
-    $index['fetch'] = $bag->fetch;
+    $document['fetch'] = $bag->fetch;
 
-    $index['serialization'] = pathinfo($bag_path, PATHINFO_EXTENSION);
+    $document['serialization'] = pathinfo($bag_path, PATHINFO_EXTENSION);
 
-    $index['content'] = get_content_data(realpath($bag_path), $cmd['content_files']);
+    $document['content'] = get_content_data(realpath($bag_path), $cmd['content_files']);
 
     $bag_info = array();
     foreach ($bag->bagInfoData as $tag => &$value) {
       $trimmed_tag = trim($tag); 
-      $index['bag-info'][$trimmed_tag] = trim($value);
+      $document['bag-info'][$trimmed_tag] = trim($value);
     }
 
     $manifest = $bag->manifest;
@@ -97,16 +103,16 @@ foreach ($bag_paths as $bag_path) {
     $manifest->fileName = basename($manifest->fileName);
 
     $data_files = array_keys($manifest->data);
-    $index['data_files'] = $data_files;
+    $document['data_files'] = $data_files;
 
-    $index['manifest'] = $manifest;
+    $document['manifest'] = $manifest;
 
     $bag_id = pathinfo($bag_path, PATHINFO_FILENAME);
     $client = new Client([
       'base_uri' => $cmd['elasticsearch_url'],
       ]);
     try {
-      $response = $client->post($cmd['elasticsearch_index'] . '/bag/' . $bag_id, ['json' => $index]);
+      $response = $client->post($cmd['elasticsearch_index'] . '/bag/' . $bag_id, ['json' => $document]);
     }
     catch (ClientException $e) {
       print Psr7\str($e->getRequest());
@@ -179,4 +185,56 @@ function get_content_data($bag_path, $paths) {
     $content_text .= $text;
   }
   return trim($content_text);
+}
+
+/**
+ * See if the index exists.
+ *
+ * @param string $base_url
+ *   The Elasticsearch server's URL.
+ * @param string $index
+ *   The Elasticsearch index to apply the mappings to.
+ *
+ * @return bool
+ *   True if the index exists, false if not.
+ */
+function index_exists($base_url, $index) {
+    $client = new Client(['base_uri' => $base_url]);
+    try {
+      $index_exists_response = $client->request('GET', $index);
+    }
+    catch (ClientException $e) {
+      if ($e->getResponse()->getStatusCode() == 404) {
+        return false;
+      }
+    }
+
+    return true;
+}
+
+/**
+ * Create the index and apply mappings.
+ *
+ * @param string $base_url
+ *   The Elasticsearch server's URL.
+ * @param string $index
+ *   The Elasticsearch index to apply the mappings to.
+ */
+function create_index($base_url, $index) {
+    $client = new Client(['base_uri' => $base_url]);
+
+    // Create mappings for our index.
+    $mappings = array();
+    // Define the 'content' field as 'text' type.
+    $mappings['mappings']['bag']['properties']['content']['type'] = 'text';
+
+    try {
+      $response = $client->request('PUT', $index);
+    }
+    catch (ClientException $e) {
+      if ($e->getResponse()->getStatusCode() != 201) {
+        print "Cannot create index, exiting\n";
+        exit;
+      }
+    }
 }
