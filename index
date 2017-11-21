@@ -223,13 +223,11 @@ function index_exists($base_url, $index) {
 function create_index($base_url, $index) {
     $client = new Client(['base_uri' => $base_url]);
 
-    // Create mappings for our index.
-    $mappings = array();
     // Define the 'content' field as 'text' type.
     $mappings['mappings']['bag']['properties']['content']['type'] = 'text';
 
     try {
-      $response = $client->request('PUT', $index);
+      $response = $client->put($base_url . '/' . $index, ['json' => $mappings]);
     }
     catch (ClientException $e) {
       if ($e->getResponse()->getStatusCode() != 201) {
