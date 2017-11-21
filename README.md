@@ -20,7 +20,6 @@ With a little more developement beyond this proof of concept, you could ask ques
 * I have a file, and I want to query Elasticsearch to see if its SHA-1 (or other) hash matches any that are in Bag
 * I want to know which Bags have a 'Bag-Group-Identifier' tag that contains the ID of a specific collection
 * I want to know which Bags use a specific [BagIt profile](https://github.com/ruebot/bagit-profiles)
-* I want to know which Bags contain a specific file that is not managed by the Bag (e.g., "DC.xml" in the root of the Bag)
 
 Using Elasticsearch's [Kibana](https://www.elastic.co/products/kibana), it is possible to create visualizations of the indexed data. This [video](https://youtu.be/mMhnGjp8oOI) provides a useful introduction to Kibana.
 
@@ -36,6 +35,7 @@ Features that may be desirable in a tool based on this proof of concept include:
 - [ ] Log indexing errors
 - [x] Add the ability to index specific content files within the Bags, to assist in discovery and management
 - [ ] Develop a desktop or web-based app that performs functions similar to this command-line tool
+- [ ] Use Apache Tika to extract content from files for indexing
 
 ## System requirements and installation
 
@@ -143,7 +143,7 @@ This indexing results in an Elasticsarch document for each Bag like this:
 
 This is the data that you will be querying in the "Finding Bags" section.
 
-## Indexing "Content" files
+## Indexing "content" files
 
 Including the `--content_files` option will index the content of the specified files and store it in the Elasticsearch 'content' field. You should only include paths to plain text or XML files, not paths to image, word processing, or other binary files. If you list multiple files, the content from all files is combined into one 'content' field.
 
