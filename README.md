@@ -29,9 +29,8 @@ Features that may be desirable in a tool based on this proof of concept include:
 - [x] On adding new Bags to the input directory, index them automatically.
 - [ ] On moving Bags to a different storage location, or renamig them, update their "bag_location" values in the Elasticsearch index
 - [ ] On replacing (updating) Bags, replace their records in the Elasticsearch index
-- [ ] On deleting Bags, replace their records in the Elasticsearch index with a tombstone
+- [x] On deleting Bags, replace their records in the Elasticsearch index with a tombstone
 - [x] On indexing, validate the Bags index any validation errors in Elasticsearch
-- [x] On indexing, generate a SHA-1 or other checksum of the serialized Bag itself and add it to the Elasticsearch index, to assist in bit-level integrity checking of the Bag itself
 - [ ] Log indexing errors
 - [x] Add the ability to index specific content files within the Bags, to assist in discovery and management
 - [ ] Develop a desktop or web-based app that performs functions similar to this command-line tool
