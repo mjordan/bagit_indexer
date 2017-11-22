@@ -99,6 +99,7 @@ This indexing results in an Elasticsarch document for each Bag like this:
 	"_version": 2,
 	"found": true,
 	"_source": {
+		"bag_location_exact": "\/home\/mark\/Documents\/hacking\/bagit\/bagit_indexer\/sample_bags\/bag_03.tgz",
 		"bag_location": "\/home\/mark\/Documents\/hacking\/bagit\/bagit_indexer\/sample_bags\/bag_03.tgz",
 		"bag_validated": {
 			"timestamp": "2017-11-19T22:36:52Z",
@@ -136,7 +137,8 @@ This indexing results in an Elasticsarch document for each Bag like this:
 				"data\/master.tif": "44b16ef126bd6e0ac642460ddb1d8b1551064b03",
 				"data\/metadata.xml": "78f4cb10e0ad1302e8f97f199620d8333efaddfb"
 			}
-		}
+		},
+		"tombstone": false
 	}
 }
 ```
@@ -159,6 +161,7 @@ The `find` script allows you to perform simple queries against the indexed data.
 * 'org', which queries the contents of the `bag-info.txt` 'Source-Organization' tag
 * 'file', which queries filepaths of files in the Bag's `data` directory
 * 'bag_location', which queries filepaths of the Bag's storage location, which is the value provided to `index`'s `-input` option when the index was populated
+* 'bag_location_exact', which contains the same value as 'bag_location' but provides exact searches on it.
 
 Queries take the form `-q field:query`. For example, to search for the phrase "cold storage" in the description, run the command (note that quotes are required because of the space in the query):
 
@@ -282,6 +285,36 @@ The Python script `watch` will monitor a directory for new and updated Bags and 
 `./watch /path/to/input/dir`
 
 where `/path/to/input/dir` is the directory you want to watch. This should correspond to the directory specified in the`-i`/`--input` option used with `index`. Currently the watcher only reacts to new and updated Bag files, but it would be possible to make it react to renamed, moved, or deleted Bag files as well (provided those features were added to the `index` script).
+
+## Tombstones
+
+Deletions of Bags should be recorded with the `tombstone` script, which updates the Bag's entry in the index in the following ways:
+
+* the `tombstone` field is updated to indicate `true`
+* the `document_timestamp` field is updated to the date when `tombstone` was run
+
+The `tombstone` command's parameters are:
+
+```
+-e/--elasticsearch_url <argument>
+     URL (including port number) of your Elasticsearch endpoint. Default is "http://localhost:9200".
+
+
+-x/--elasticsearch_index <argument>
+     Elasticsearch index. Default is "bags".
+
+
+--help
+     Show the help page for this command.
+
+
+-i/--id <argument>
+     The ID of the bag to create the tombstone for. Use either this option or --path.
+
+
+-p/--path <argument>
+     Absolute or relative path to the Bag filename to create the tombstone for. Use either this option or --id.
+```
 
 ## License
 

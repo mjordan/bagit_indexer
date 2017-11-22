@@ -17,7 +17,8 @@ use \wapmorgan\UnifiedArchive\UnifiedArchive;
 $cmd = new Commando\Command();
 $cmd->option('p')
   ->aka('path')
-  ->describedAs('Absolute or relative path to the Bag filename to create the tombstone for. Use either this option or --id.');
+  ->describedAs('Absolute or relative path to the Bag filename to create the tombstone for. Use either this option or --id.')
+  ->default('');
 $cmd->option('e')
   ->aka('elasticsearch_url')
   ->describedAs('URL (including port number) of your Elasticsearch endpoint. Default is "http://localhost:9200".')
@@ -30,15 +31,21 @@ $cmd->option('i')
   ->aka('id')
   ->describedAs('The ID of the bag to create the tombstone for. Use either this option or --path.');
 
-// @todo: If --path, look up the ID.
+if (strlen($cmd['p'])) {
+    $bag_id = get_id_from_path($cmd['e'], $cmd['x'], $cmd['p']);
+}
+else {
+    $bag_id = $cmd['id'];
+}
 
-if (document_exists($cmd['elasticsearch_url'], $cmd['elasticsearch_index'], $cmd['id'])) {
+
+if (document_exists($cmd['elasticsearch_url'], $cmd['elasticsearch_index'], $bag_id)) {
     $client = new Client([
       'base_uri' => $cmd['elasticsearch_url'],
       ]);
     try {
       $update['doc'] = array('tombstone' => true, 'document_timestamp' => gmdate("Y-m-d\TH:i:s\Z")); 
-      $response = $client->post($cmd['elasticsearch_index'] . '/bag/' . $cmd['id'] . '/_update', ['json' => $update]);
+      $response = $client->post($cmd['elasticsearch_index'] . '/bag/' . $bag_id . '/_update', ['json' => $update]);
     }
     catch (ClientException $e) {
       print Psr7\str($e->getRequest());
@@ -46,11 +53,11 @@ if (document_exists($cmd['elasticsearch_url'], $cmd['elasticsearch_index'], $cmd
     }
 }
 else {
-  print "Bag " . $cmd['id'] . " not found in " . $cmd['elasticsearch_url'] . '/' . $cmd['elasticsearch_index'] . PHP_EOL;
+  print "Bag " . $bag_id . " not found in " . $cmd['elasticsearch_url'] . '/' . $cmd['elasticsearch_index'] . PHP_EOL;
   exit;
 }
 
-print "Tombstone for bag " . $cmd['id'] . " added to " . $cmd['elasticsearch_url'] . '/' . $cmd['elasticsearch_index'] . PHP_EOL;
+print "Tombstone for bag " . $bag_id . " added to " . $cmd['elasticsearch_url'] . '/' . $cmd['elasticsearch_index'] . PHP_EOL;
 
 /**
  * See if the document exists.
@@ -67,6 +74,41 @@ function document_exists($base_url, $index, $bag_id) {
     $client = new Client(['base_uri' => $base_url]);
     try {
       $document_exists_response = $client->request('GET', $index . '/bag' . '/' . $bag_id);
+    }
+    catch (ClientException $e) {
+      if ($e->getResponse()->getStatusCode() == 404) {
+        return false;
+      }
+    }
+
+    return true;
+}
+
+/**
+ * Given a bag's path, get its ID in the index.
+ *
+ * @param string $base_url
+ *   The Elasticsearch server's URL.
+ * @param string $bag_id
+ *   The ID of the bag in the Elasticsearch index.
+ * @param string $bag_path
+ *   The absolute path of the bag in the Elasticsearch index.
+ *
+ * @return string
+ *   The bag's ID.
+ */
+function get_id_from_path($base_url, $index, $bag_path) {
+    $client = new Client(['base_uri' => $base_url]);
+    try {
+      $query = array('query' => array('term' => array('bag_location_exact' => $bag_path)));
+      $response = $client->request('GET', '/'. $index . '/bag' . '/_search', ['json' => $query]);
+      $result = json_decode($response->getBody());
+      if ($result->hits->total > 0) {
+      return $result->hits->hits[0]->_id;
+      }
+      else {
+          return false;
+      }
     }
     catch (ClientException $e) {
       if ($e->getResponse()->getStatusCode() == 404) {
