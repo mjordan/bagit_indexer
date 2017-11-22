@@ -36,8 +36,8 @@ class WatchHandler(PatternMatchingEventHandler):
     # Covers moving and renaming. @todo: confirm that we are dealing with the
     # same serialized Bag file by comparing its checksum on disk with the one
     # stored in ElasticSearch. See https://github.com/mjordan/bagit_indexer/issues/9.
-    def on_moved(self, event):
-        call(["php", bagit_indexer_path, "-i", os.path.abspath(event.src_path)])
+    # def on_moved(self, event):
+        # call(["php", bagit_indexer_path, "-i", os.path.abspath(event.src_path)])
 
     def on_deleted(self, event):
         call(["php", bagit_tombstoner_path, "-p", os.path.abspath(event.src_path)])
