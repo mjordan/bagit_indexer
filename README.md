@@ -313,6 +313,34 @@ The `tombstone` command's parameters are:
      Absolute or relative path to the Bag filename to create the tombstone for. Use either this option or --id.
 ```
 
+To see which Bag entries in the index are flagged as tombstones, you can issue queries like this:
+
+```
+./find -q "tombstone:true"
+Your query found 1 hit(s): 
+--------------------------------------------------------
+| Bag ID                                   | Tombstone |
+========================================================
+| 212835b8628503774e482279167a1c965d107303 | 1         |
+--------------------------------------------------------
+
+./find -q "tombstone:false"
+Your query found 4 hit(s): 
+--------------------------------------------------------
+| Bag ID                                   | Tombstone |
+========================================================
+| 0216ce82b6a3c4ff127c28569f4ae84589bc3e99 |           |
+--------------------------------------------------------
+| ebd53651c768da1dbca352988e8a93d3f5f9c2d7 |           |
+--------------------------------------------------------
+| 7c17053b7d30abd69c5e0eb10d5cc4c2ad915f4f |           |
+--------------------------------------------------------
+| fa50e06f6cc12e9e1b90e84da1f394bb8b624d54 |           |
+--------------------------------------------------------
+```
+
+The false values show up as blank in the results - that is normal.
+
 ## License
 
 ![This work is in the Public Domain](http://i.creativecommons.org/p/mark/1.0/88x31.png)

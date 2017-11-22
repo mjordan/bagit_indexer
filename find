@@ -83,8 +83,11 @@ switch ($field) {
   case 'bag_location':
     $query_field = 'bag_location';
     break;
+  case 'tombstone':
+    $query_field = 'tombstone';
+    break;
   default:
-    print "Sorry, I don't recognize that field; you can use 'content', 'description', 'date', 'org', 'file', 'bag_location_exact', or 'bag_location'." . PHP_EOL;
+    print "Sorry, I don't recognize that field; you can use 'content', 'description', 'date', 'org', 'file', 'tombstone', 'bag_location_exact', or 'bag_location'." . PHP_EOL;
     exit;
 }
 
@@ -125,6 +128,9 @@ if ($results['hits']['total'] > 0) {
       break;
     case 'bag_location':
       $table_data[] = array('Bag ID' => $hit['_id'], 'Source path' => $hit['_source']['bag_location']);
+      break;
+    case 'tombstone':
+      $table_data[] = array('Bag ID' => $hit['_id'], 'Tombstone' => $hit['_source']['tombstone']);
       break;
     }
   }
