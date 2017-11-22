@@ -95,7 +95,7 @@ This indexing results in an Elasticsarch document for each Bag like this:
 {
 	"_index": "bags",
 	"_type": "bag",
-	"_id": "bag_03",
+	"_id": "ebd53651c768da1dbca352988e8a93d3f5f9c2d7",
 	"_version": 2,
 	"found": true,
 	"_source": {
@@ -171,13 +171,13 @@ which will return the following results:
 
 ```
 Your query found 2 hit(s): 
-----------------------------------------------------------------------------------------------
-| Bag ID | External-Description                                                              |
-==============================================================================================
-| bag_01 | Contains some stuff we want to put into cold storage.                             |
-----------------------------------------------------------------------------------------------
-| bag_02 | Contains some stuff we want to put into cold storage, and that is very important. |
-----------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------
+| Bag ID                                   | External-Description                                                              |
+================================================================================================================================
+| 212835b8628503774e482279167a1c965d107303 | Contains some stuff we want to put into cold storage.                             |
+--------------------------------------------------------------------------------------------------------------------------------
+| 0216ce82b6a3c4ff127c28569f4ae84589bc3e99 | Contains some stuff we want to put into cold storage, and that is very important. |
+--------------------------------------------------------------------------------------------------------------------------------
 ```
 
 To search for Bags that have a Bagging-Date of "2017-06-18", run this command:
@@ -188,17 +188,17 @@ which will return the following result:
 
 ```
 Your query found 4 hit(s): 
-------------------------------
-| Bag ID      | Bagging-Date |
-==============================
-| bag_01002   | 2017-06-18   |
-------------------------------
-| bag_02      | 2017-06-18   |
-------------------------------
-| bag_01      | 2017-06-18   |
-------------------------------
-| bag_z2098-4 | 2017-06-18   |
-------------------------------
+-----------------------------------------------------------
+| Bag ID                                   | Bagging-Date |
+===========================================================
+| 0216ce82b6a3c4ff127c28569f4ae84589bc3e99 | 2017-06-18   |
+-----------------------------------------------------------
+| 212835b8628503774e482279167a1c965d107303 | 2017-06-18   |
+-----------------------------------------------------------
+| 7c17053b7d30abd69c5e0eb10d5cc4c2ad915f4f | 2017-06-18   |
+-----------------------------------------------------------
+| fa50e06f6cc12e9e1b90e84da1f394bb8b624d54 | 2017-06-18   |
+-----------------------------------------------------------
 ```
 
 To search for Bags that contain a file under `data` named 'master.tif', run this command:
@@ -209,18 +209,18 @@ which will return the following result:
 
 ```
 Your query found 1 hit(s): 
--------------------------------------------------------------------
-| Bag ID | Data files                                             |
-===================================================================
-| bag_03 | data/atextfile.txt, data/master.tif, data/metadata.xml |
--------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------
+| Bag ID                                   | Data files                                             |
+=====================================================================================================
+| ebd53651c768da1dbca352988e8a93d3f5f9c2d7 | data/atextfile.txt, data/master.tif, data/metadata.xml |
+-----------------------------------------------------------------------------------------------------
 ```
 
 ## Retrieving the Elasticsearch document for a specific Bag
 
 If you want to retrieve the raw Elasticsearch document for a specific Bag, use the `--id` option instead of the `-q` option, and provide the Bag's ID:
 
-```./find --id bag_03```
+```./find --id ebd53651c768da1dbca352988e8a93d3f5f9c2d7```
 
 ## Sample Bags
 
@@ -296,17 +296,15 @@ Deletions of Bags should be recorded with the `tombstone` script, which updates 
 The `tombstone` command's parameters are:
 
 ```
+--help
+     Show the help page for this command.
+
 -e/--elasticsearch_url <argument>
      URL (including port number) of your Elasticsearch endpoint. Default is "http://localhost:9200".
 
 
 -x/--elasticsearch_index <argument>
      Elasticsearch index. Default is "bags".
-
-
---help
-     Show the help page for this command.
-
 
 -i/--id <argument>
      The ID of the bag to create the tombstone for. Use either this option or --path.
