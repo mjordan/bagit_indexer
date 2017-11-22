@@ -1,0 +1,78 @@
+#!/usr/bin/env php
+<?php
+
+/**
+ * Script for creating tombstone entries for Bags in ElasticSearch.
+ *
+ * Run './tombstone --help' for usage.
+ */
+
+require 'vendor/autoload.php';
+use GuzzleHttp\Client;
+use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Psr7;
+use \wapmorgan\UnifiedArchive\UnifiedArchive;
+
+$cmd = new Commando\Command();
+$cmd->option('p')
+  ->aka('path')
+  ->describedAs('Absolute or relative path to the Bag filename to create the tombstone for. Use either this option or --id.');
+$cmd->option('e')
+  ->aka('elasticsearch_url')
+  ->describedAs('URL (including port number) of your Elasticsearch endpoint. Default is "http://localhost:9200".')
+  ->default('http://localhost:9200');
+$cmd->option('x')
+  ->aka('elasticsearch_index')
+  ->describedAs('Elasticsearch index. Default is "bags".')
+  ->default('bags');
+$cmd->option('i')
+  ->aka('id')
+  ->describedAs('The ID of the bag to create the tombstone for. Use either this option or --path.');
+
+// @todo: If --path, look up the ID.
+
+if (document_exists($cmd['elasticsearch_url'], $cmd['elasticsearch_index'], $cmd['id'])) {
+    $client = new Client([
+      'base_uri' => $cmd['elasticsearch_url'],
+      ]);
+    try {
+      $update['doc'] = array('tombstone' => true, 'document_timestamp' => gmdate("Y-m-d\TH:i:s\Z")); 
+      $response = $client->post($cmd['elasticsearch_index'] . '/bag/' . $cmd['id'] . '/_update', ['json' => $update]);
+    }
+    catch (ClientException $e) {
+      print Psr7\str($e->getRequest());
+      print Psr7\str($e->getResponse());
+    }
+}
+else {
+  print "Bag " . $cmd['id'] . " not found in " . $cmd['elasticsearch_url'] . '/' . $cmd['elasticsearch_index'] . PHP_EOL;
+  exit;
+}
+
+print "Tombstone for bag " . $cmd['id'] . " added to " . $cmd['elasticsearch_url'] . '/' . $cmd['elasticsearch_index'] . PHP_EOL;
+
+/**
+ * See if the document exists.
+ *
+ * @param string $base_url
+ *   The Elasticsearch server's URL.
+ * @param string $bag_id
+ *   The ID of the bag in the Elasticsearch index.
+ *
+ * @return bool
+ *   True if the index exists, false if not.
+ */
+function document_exists($base_url, $index, $bag_id) {
+    $client = new Client(['base_uri' => $base_url]);
+    try {
+      $document_exists_response = $client->request('GET', $index . '/bag' . '/' . $bag_id);
+    }
+    catch (ClientException $e) {
+      if ($e->getResponse()->getStatusCode() == 404) {
+        return false;
+      }
+    }
+
+    return true;
+}

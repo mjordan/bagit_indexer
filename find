@@ -53,7 +53,7 @@ if (strlen($cmd['id'])) {
       print "Bag with ID " . $cmd['i'] . " not found.\n";
     }
     else {
-      print "Oops -unanticipated error: " . $e->getMessage() . "\n";
+      print "Oops - unanticipated error: " . $e->getMessage() . "\n";
     }
   }
   exit;

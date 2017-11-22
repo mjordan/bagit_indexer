@@ -4,7 +4,7 @@
 /**
  * Script for parsing out data from Bags for indexing in ElasticSearch.
  *
- * Run 'php bagit_indexer.php --help' for usage.
+ * Run './index --help' for usage.
  */
 
 require 'vendor/autoload.php';
@@ -22,9 +22,9 @@ $cmd->option('i')
   ->describedAs('Absolute or relative path to either a directory containing Bags (trailing slash is optional), or to a Bag filename.')
   ->must(function ($dir_path) {
       if (file_exists($dir_path)) {
-          return true;
+        return true;
       } else {
-          return false;
+        return false;
       }
 });
 $cmd->option('e')
@@ -65,7 +65,7 @@ foreach ($bag_paths as $bag_path) {
   if (is_file($bag_path)) {
     $bag = new BagIt($bag_path);
 
-    $document['document_created'] = gmdate("Y-m-d\TH:i:s\Z");
+    $document['document_timestamp'] = gmdate("Y-m-d\TH:i:s\Z");
 
     $document['bag_location'] = realpath($bag_path);
 
@@ -106,6 +106,8 @@ foreach ($bag_paths as $bag_path) {
     $document['data_files'] = $data_files;
 
     $document['manifest'] = $manifest;
+
+    $document['tombstone'] = false;
 
     $bag_id = pathinfo($bag_path, PATHINFO_FILENAME);
     $client = new Client([
@@ -225,6 +227,7 @@ function create_index($base_url, $index) {
 
     // Define the 'content' field as 'text' type.
     $mappings['mappings']['bag']['properties']['content']['type'] = 'text';
+    $mappings['mappings']['bag']['properties']['tombstone']['type'] = 'boolean';
 
     try {
       $response = $client->put($base_url . '/' . $index, ['json' => $mappings]);
