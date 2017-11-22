@@ -277,11 +277,11 @@ Here are the values from `bag-info.txt` tags and the list of files in the `data`
 
 ## Monitoring input directories for changes
 
-The Python script `watch` will monitor a directory for new Bags and index them automatically. Run it like this:
+The Python script `watch` will monitor a directory for new and updated Bags and index them automatically. Run it like this:
 
 `./watch /path/to/input/dir`
 
-where `/path/to/input/dir` is the directory you want to watch. This should correspond to the directory specified in the`-i`/`--input` option used with `index`. Currently the watcher only reacts to new files, but it would be possible to make it react to updated, renamed, moved, or deleted Bag files as well (provided those features were added to the `index` script).
+where `/path/to/input/dir` is the directory you want to watch. This should correspond to the directory specified in the`-i`/`--input` option used with `index`. Currently the watcher only reacts to new and updated Bag files, but it would be possible to make it react to renamed, moved, or deleted Bag files as well (provided those features were added to the `index` script).
 
 ## License
 
