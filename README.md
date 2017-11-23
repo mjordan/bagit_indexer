@@ -148,7 +148,7 @@ This is the data that you will be querying in the "Finding Bags" section.
 
 ## The Bag's identifier within the index
 
-Within the index, each Bag is identified by its SHA1 checksum value at the time of initial indexing. Using the SHA1 value ensures that each Bag's ID is unique. Alternatives to using the Bag's SHA1 value include the Bag's filename or the value of a required tag in the `bagit-info.txt` file. However, both of these are problematic because there is not way to guarantee that they will provide unique values. Another option is to have the script assign an auto-incremented ID or a UUID. The UUID would be unique, but the SHA1 value has the added advantage of being derivable from the serialized Bag file itself in the event that the Elasticsearch index becomes lost.
+Within the index, each Bag is identified by its SHA1 checksum value at the time of initial indexing. Using the SHA1 value ensures that each Bag's ID is unique. Alternatives identifiers include the Bag's filename or the value of a required tag in the `bagit-info.txt` file. However, both of these are problematic because it would be very difficult to guarantee that they will provide unique values. Another option is to have the `index` script assign an auto-incremented ID or a UUID. The UUID would be unique, but the SHA1 value has the added advantage of being derivable from the serialized Bag file itself in the event that the Elasticsearch index becomes lost.
 
 The main disadvantage of using the SHA1 value of a serialized Bag file at the time the Bag is added to the index is that the value will change if that file is modified in some way. Therefore, the advantage of having the file's ID derived from the file itself only applies to Bags that have never been modified.
 

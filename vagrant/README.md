@@ -4,6 +4,7 @@ This set of Vagrant scripts will build a virutal machine running:
 
 * Ubuntu 14.04/trusty64
 * Elasticsearch 5.6.4
+* Kibana 5.6.4
 
 ## System requirements and installation
 
@@ -38,6 +39,8 @@ If you see a response similar to the following, your Elasticsearch instance is o
   "tagline" : "You Know, for Search"
 }
 ```
+
+If you want to use Kibana, its URL is `http://localhost:5601`.
 
 ## Using BagIt Indexer from within the virtual machine
 
