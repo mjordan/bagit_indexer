@@ -35,7 +35,7 @@ Features that may be desirable in a tool based on this proof of concept include:
 - [x] Add the ability to index specific content files within the Bags, to assist in discovery and management
 - [ ] Develop a desktop or web-based app that performs functions similar to this command-line tool
 - [ ] Use Apache Tika to extract content from files for indexing
-- [ ] For Bags that are updated, moved, remaned, or deleted, commit the Elasticsearch document to a Git repository in order to preserve it, noting the commit's SHA1 hash in the new document.
+- [ ] For Bags that are updated, moved, remaned, or deleted, commit the Elasticsearch document to a Git repository in order to preserve it and track changeds to it over time
 
 ## System requirements and installation
 
@@ -147,9 +147,9 @@ This is the data that you will be querying in the "Finding Bags" section.
 
 ## The Bag's identifier within the index
 
-The `index` script uses a newly added Bag file's SHA1 checksum as the Bag's ID within the index. It does this in order to ensure that the ID is unique. Practical alternatives to using the Bag's SHA1 value include the Bag's filename or some value in a `bagit-info.txt` tag. Both of these are problematic. Another alternative is to have the script assign an auto-incremented ID or a UUID. The UUID would guarantee a unique ID, but the SHA1 has the added advantage of being derivable from the serialized Bag file itself in the event that the Elasticsearch index becomes lost.
+The `index` script uses a newly added Bag file's SHA1 checksum as the Bag's ID within the index. It does this in order to ensure that the ID is unique. Alternatives to using the Bag's SHA1 value include the Bag's filename or the value of a required tag in the `bagit-info.txt` file. Both of these are problematic. Another option is to have the script assign an auto-incremented ID or a UUID. The UUID would be unique, but the SHA1 value has the added advantage of being derivable from the serialized Bag file itself in the event that the Elasticsearch index becomes lost.
 
-The SHA1 value of a .zip file will change if that file is modified in some way, so the advantage of having the file's ID derived from the file itself only applies to Bags that have never been modified.
+The main disadvantage of using the SHA1 value of a serialized Bag file at the time the Bag is added to the index is that the value will change if that file is modified in some way. Therefore, the advantage of having the file's ID derived from the file itself only applies to Bags that have never been modified.
 
 ## Indexing "content" files
 
