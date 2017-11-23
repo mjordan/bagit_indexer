@@ -35,6 +35,7 @@ Features that may be desirable in a tool based on this proof of concept include:
 - [x] Add the ability to index specific content files within the Bags, to assist in discovery and management
 - [ ] Develop a desktop or web-based app that performs functions similar to this command-line tool
 - [ ] Use Apache Tika to extract content from files for indexing
+- [ ] For Bags that are updated, moved, remaned, or deleted, commit the Elasticsearch document to a Git repository in order to preserve it, noting the commit's SHA1 hash in the new document.
 
 ## System requirements and installation
 
@@ -143,6 +144,12 @@ This indexing results in an Elasticsarch document for each Bag like this:
 ```
 
 This is the data that you will be querying in the "Finding Bags" section.
+
+## The Bag's identifier within the index
+
+The `index` script uses a newly added Bag file's SHA1 checksum as the Bag's ID within the index. It does this in order to ensure that the ID is unique. Practical alternatives to using the Bag's SHA1 value include the Bag's filename or some value in a `bagit-info.txt` tag. Both of these are problematic. Another alternative is to have the script assign an auto-incremented ID or a UUID. The UUID would guarantee a unique ID, but the SHA1 has the added advantage of being derivable from the serialized Bag file itself in the event that the Elasticsearch index becomes lost.
+
+The SHA1 value of a .zip file will change if that file is modified in some way, so the advantage of having the file's ID derived from the file itself only applies to Bags that have never been modified.
 
 ## Indexing "content" files
 
@@ -283,7 +290,7 @@ The Python script `watch` will monitor a directory for new and updated Bags and 
 
 `./watch /path/to/input/dir`
 
-where `/path/to/input/dir` is the directory you want to watch. This should correspond to the directory specified in the`-i`/`--input` option used with `index`. Currently the watcher only reacts to new, updated, and deleted Bag files, but it would be possible to make it react to renamed and moved Bag files as well (provided those features were added to the `index` script).
+where `/path/to/input/dir` is the directory you want to watch. This should correspond to the directory specified in the`-i`/`--input` option used with `index`. Currently the watcher only reacts to new and deleted Bag files, but it would be possible to make it react to modified, renamed and moved Bag files as well (provided those features were added to the `index` script).
 
 ## Tombstones
 

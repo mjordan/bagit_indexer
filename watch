@@ -30,8 +30,8 @@ class WatchHandler(PatternMatchingEventHandler):
     def on_created(self, event):
         call(["php", bagit_indexer_path, "-i", os.path.abspath(event.src_path)])
 
-    def on_modified(self, event):
-        call(["php", bagit_indexer_path, "-i", os.path.abspath(event.src_path)])
+    # def on_modified(self, event):
+        # call(["php", bagit_indexer_path, "-i", os.path.abspath(event.src_path)])
 
     # Covers moving and renaming. @todo: confirm that we are dealing with the
     # same serialized Bag file by comparing its checksum on disk with the one
