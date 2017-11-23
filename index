@@ -83,7 +83,6 @@ foreach ($bag_paths as $bag_path) {
     $bag_sha1 = sha1_file($bag_path);
     $document['bag_hash']['type'] = 'sha1';
     $document['bag_hash']['value'] = $bag_sha1;
-    var_dump($bag_sha1);
 
     $document['bagit_version'] = $bag->bagVersion;
     $bag->fetch->fileName = basename($bag->fetch->fileName);

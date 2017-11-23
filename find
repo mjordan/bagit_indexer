@@ -18,6 +18,10 @@ $cmd->option('i')
   ->aka('id')
   ->describedAs('The ID of a Bag. The Elasticsearch document for the Bag will be retrieved and displayed. Do not mix with --query.')
   ->default('');
+$cmd->option('a')
+  ->aka('all')
+  ->describedAs("List all Bags' IDs accompanied by their location.")
+  ->boolean();
 $cmd->option('e')
   ->aka('elasticsearch_url')
   ->describedAs('URL (including port number) of your Elasticsearch endpoint. Default is "http://localhost:9200".')
@@ -34,6 +38,26 @@ $hosts = array($cmd['e']);
 $clientBuilder = ClientBuilder::create();
 $clientBuilder->setHosts($hosts);
 $client = $clientBuilder->build();
+
+// If the request is for a all Bags, retrieve them here and go no further.
+if ($cmd['all']) {
+  $params = [
+    'index' => 'bags',
+    'type' => 'bag',
+    'body' => [
+        'query' => [
+            'match_all' => new \stdClass(),
+        ]
+    ]
+  ];
+  $results = $client->search($params);
+  foreach ($results['hits']['hits'] as $hit) {
+    $table_data[] = array('Bag ID' => $hit['_id'], 'Bag Location' => $hit['_source']['bag_location']);
+  }
+
+  $climate->table($table_data);
+  exit;
+}
 
 // If the request is for a specific Bag's document, retrieve it here and go no further.
 if (strlen($cmd['id'])) {

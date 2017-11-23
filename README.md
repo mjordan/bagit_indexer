@@ -222,6 +222,12 @@ Your query found 1 hit(s):
 -----------------------------------------------------------------------------------------------------
 ```
 
+## Retrieving the Elasticsearch ID and location for all Bags
+
+If you want to see a list of all Bags' IDs and file path locations, issue the following command:
+
+```./find -a``` 
+
 ## Retrieving the Elasticsearch document for a specific Bag
 
 If you want to retrieve the raw Elasticsearch document for a specific Bag, use the `--id` option instead of the `-q` option, and provide the Bag's ID:
