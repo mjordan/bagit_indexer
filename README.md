@@ -30,12 +30,12 @@ Features that may be desirable in a tool based on this proof of concept include:
 - [ ] On moving Bags to a different storage location, or renamig them, update their "bag_location" values in the Elasticsearch index
 - [ ] On replacing (updating) Bags, replace their records in the Elasticsearch index
 - [x] On deleting Bags, replace their records in the Elasticsearch index with a tombstone
-- [x] On indexing, validate the Bags index any validation errors in Elasticsearch
+- [x] On indexing, validate the Bags and record any validation errors in Elasticsearch
 - [ ] Log indexing errors
 - [x] Add the ability to index specific content files within the Bags, to assist in discovery and management
 - [ ] Develop a desktop or web-based app that performs functions similar to this command-line tool
 - [ ] Use Apache Tika to extract content from files for indexing
-- [ ] For Bags that are updated, moved, remaned, or deleted, commit the Elasticsearch document to a Git repository in order to preserve it and track changeds to it over time
+- [ ] For Bags that are updated, moved, remaned, or deleted, commit the Elasticsearch document to a Git repository in order to track changeds to it over time
 
 ## System requirements and installation
 
@@ -148,9 +148,9 @@ This is the data that you will be querying in the "Finding Bags" section.
 
 ## The Bag's identifier within the index
 
-Within the index, each Bag is identified by its SHA1 checksum value at the time of initial indexing. Using the SHA1 value ensures that each Bag's ID is unique. Alternatives identifiers include the Bag's filename or the value of a required tag in the `bagit-info.txt` file. However, both of these are problematic because it would be very difficult to guarantee that they will provide unique values. Another option is to have the `index` script assign an auto-incremented ID or a UUID. The UUID would be unique, but the SHA1 value has the added advantage of being derivable from the serialized Bag file itself in the event that the Elasticsearch index becomes lost.
+Within the index, each Bag is identified by its SHA1 checksum value at the time of initial indexing. Using the SHA1 value ensures that each Bag's ID is unique. Alternatives identifiers include the Bag's filename or the value of a required tag in the `bagit-info.txt` file. However, both of these are problematic because it would be very difficult to guarantee that they will provide unique values. Another option is to have the `index` script assign a UUID. The UUID would be unique, but the SHA1 value has the added advantage of being derivable from the serialized Bag file itself in the event that the Elasticsearch index becomes lost.
 
-The main disadvantage of using the SHA1 value of a serialized Bag file at the time the Bag is added to the index is that the value will change if that file is modified in some way. Therefore, the advantage of having the file's ID derived from the file itself only applies to Bags that have never been modified.
+The main disadvantage of using the SHA1 value of a serialized Bag file at the time the Bag is added to the index is that the value will change if that file is modified in some way. Therefore, the advantage of having the file's ID derived from the file itself only applies to Bags that have never been modified. This disadvantage can be mitigated by storing the history of changes to the Elasticsearch document for the Bag in a Git repository, for example.
 
 ## Indexing "content" files
 
@@ -359,7 +359,7 @@ The false values show up as blank in the results - that is normal.
 
 ![This work is in the Public Domain](http://i.creativecommons.org/p/mark/1.0/88x31.png)
 
-To the extent possible under law, Mark Jordan has waived all copyright and related or neighboring rights to this work. This work is published from: Canada. 
+To the extent possible under law, Mark Jordan has waived all copyright and related or neighboring rights to this work. This work is published from Canada. 
 
 ## Contributing
 
