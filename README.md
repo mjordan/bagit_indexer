@@ -37,6 +37,12 @@ Features that may be desirable in a tool based on this proof of concept include:
 - [ ] Use Apache Tika to extract content from files for indexing
 - [ ] For Bags that are updated, moved, remaned, or deleted, commit the Elasticsearch document to a Git repository in order to preserve it and track changeds to it over time
 
+This proof of concept implementation can index Bags stored at disparate locations (and on heterogeneous hardware):
+
+![Overview diagram](overview.png)
+
+In addition to preservation staff querying the index, automated processes can as well, for example a script to generate a daily list of new Bags added to the index.
+
 ## System requirements and installation
 
 To install and run this proof of concept indexer, you will need:
